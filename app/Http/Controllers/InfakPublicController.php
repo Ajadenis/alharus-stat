@@ -6,9 +6,34 @@ use App\Models\Santri;
 use App\Models\Infak;
 use App\Models\KonfigurasiInfak;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InfakPublicController extends Controller
 {
+    // ========================================
+    // DAFTAR BULAN (ANGKA → NAMA)
+    // ========================================
+    private function getBulanList()
+    {
+        return [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+    }
+
+    // ========================================
+    // INDEX
+    // ========================================
     public function index()
     {
         $bulanList = $this->getBulanList();
@@ -18,6 +43,9 @@ class InfakPublicController extends Controller
         return view('infak.index', compact('bulanList', 'nominal'));
     }
 
+    // ========================================
+    // CARI SANTRI
+    // ========================================
     public function cariSantri(Request $request)
     {
         $request->validate([
@@ -57,10 +85,11 @@ class InfakPublicController extends Controller
         ]);
     }
 
-    // 👇 PERBAIKI METHOD INI
+    // ========================================
+    // UPLOAD BUKTI PEMBAYARAN
+    // ========================================
     public function uploadBukti(Request $request)
     {
-        // Validasi dasar
         $request->validate([
             'santri_id' => 'required|exists:santris,id',
             'bulan' => 'required',
@@ -68,34 +97,28 @@ class InfakPublicController extends Controller
             'metode' => 'required|in:tunai,transfer,qris',
             'bukti' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'nama_pengirim' => 'nullable|string|max:255',
+            'jumlah' => 'required|numeric|min:1',
         ]);
 
-        // Proses data bulan (bisa array atau string)
+        // ========================================
+        // PARSE BULAN
+        // ========================================
         $bulanData = $request->bulan;
-        
-        // Jika bulan berupa string JSON, parse ke array
+
         if (is_string($bulanData) && str_starts_with($bulanData, '[')) {
             $bulanList = json_decode($bulanData, true);
-        } 
-        // Jika bulan berupa array langsung
-        else if (is_array($bulanData)) {
+        } elseif (is_array($bulanData)) {
             $bulanList = $bulanData;
-        } 
-        // Jika bulan berupa string tunggal
-        else {
+        } else {
             $bulanList = [$bulanData];
         }
 
-        // Pastikan bulan adalah array
-        if (!is_array($bulanList)) {
-            $bulanList = [$bulanList];
-        }
-
-        // Filter bulan yang valid
-        $bulanValid = $this->getBulanList();
-        $bulanList = array_filter($bulanList, function($bulan) use ($bulanValid) {
-            return in_array($bulan, $bulanValid);
+        // Validasi: harus angka 1-12
+        $bulanList = array_filter($bulanList, function ($bulan) {
+            return is_numeric($bulan) && $bulan >= 1 && $bulan <= 12;
         });
+
+        $bulanList = array_map('intval', $bulanList);
 
         if (empty($bulanList)) {
             return response()->json([
@@ -104,38 +127,83 @@ class InfakPublicController extends Controller
             ], 422);
         }
 
+        // ========================================
+        // VALIDASI: CEK BULAN YANG SUDAH LUNAS
+        // ========================================
+        $existingInfaks = Infak::where('santri_id', $request->santri_id)
+                              ->where('tahun', $request->tahun)
+                              ->whereIn('bulan', $bulanList)
+                              ->get()
+                              ->keyBy('bulan');
+
+        $bulanLunas = [];
+        $bulanPending = [];
+        $bulanBisaBayar = [];
+
+        foreach ($bulanList as $bulan) {
+            if (isset($existingInfaks[$bulan])) {
+                if ($existingInfaks[$bulan]->status === 'lunas') {
+                    $bulanLunas[] = $bulan;
+                } elseif ($existingInfaks[$bulan]->status === 'pending') {
+                    $bulanPending[] = $bulan;
+                } else {
+                    $bulanBisaBayar[] = $bulan;
+                }
+            } else {
+                $bulanBisaBayar[] = $bulan;
+            }
+        }
+
+        // Jika semua bulan sudah lunas
+        if (empty($bulanBisaBayar)) {
+            $pesan = [];
+            if (!empty($bulanLunas)) {
+                $pesan[] = "Bulan " . implode(', ', array_map(fn($b) => $this->getBulanList()[$b], $bulanLunas)) . " sudah LUNAS";
+            }
+            if (!empty($bulanPending)) {
+                $pesan[] = "Bulan " . implode(', ', array_map(fn($b) => $this->getBulanList()[$b], $bulanPending)) . " masih PENDING (menunggu konfirmasi admin)";
+            }
+
+            return response()->json([
+                'status' => 'error',
+                'message' => implode('. ', $pesan) . '.'
+            ], 422);
+        }
+
+        // ========================================
+        // UPLOAD BUKTI
+        // ========================================
         $santri = Santri::find($request->santri_id);
         $tahun = $request->tahun;
         $metode = $request->metode;
-        $nominalPerBulan = $request->jumlah / count($bulanList);
+        $nominalPerBulan = $request->jumlah / count($bulanBisaBayar);
 
-        // Upload bukti sekali saja
         $buktiPath = null;
         if ($request->hasFile('bukti')) {
+            $folder = public_path('images/infak');
+            if (!file_exists($folder)) {
+                mkdir($folder, 0755, true);
+            }
+
             $file = $request->file('bukti');
             $filename = 'infak_' . $santri->nisa . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images/infak'), $filename);
+            $file->move($folder, $filename);
             $buktiPath = 'infak/' . $filename;
         }
 
-        // Simpan setiap bulan
+        // ========================================
+        // SIMPAN DATA
+        // ========================================
         $successCount = 0;
-        foreach ($bulanList as $bulan) {
+
+        foreach ($bulanBisaBayar as $bulan) {
             $infak = Infak::firstOrNew([
                 'santri_id' => $request->santri_id,
-                'bulan' => $bulan,
+                'bulan' => $bulan,   // 👈 angka
                 'tahun' => $tahun,
             ]);
 
-            // Jika sudah lunas, skip
-            if ($infak->status === 'lunas') {
-                continue;
-            }
-
-            $infak->santri_id = $request->santri_id;
             $infak->nisa = $santri->nisa;
-            $infak->bulan = $bulan;
-            $infak->tahun = $tahun;
             $infak->jumlah = $nominalPerBulan;
             $infak->metode_pembayaran = $metode;
             $infak->status = 'pending';
@@ -145,44 +213,58 @@ class InfakPublicController extends Controller
             $successCount++;
         }
 
-        if ($successCount == 0) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Semua bulan sudah lunas!'
-            ], 422);
+        // ========================================
+        // RESPONSE
+        // ========================================
+        $message = "Bukti pembayaran untuk {$successCount} bulan berhasil diupload! Menunggu konfirmasi admin.";
+
+        if (!empty($bulanLunas)) {
+            $message .= " (Bulan " . implode(', ', array_map(fn($b) => $this->getBulanList()[$b], $bulanLunas)) . " dilewati karena sudah lunas)";
         }
 
         return response()->json([
             'status' => 'success',
-            'message' => "Bukti pembayaran untuk {$successCount} bulan berhasil diupload! Menunggu konfirmasi admin."
+            'message' => $message
         ]);
     }
 
+    // ========================================
+    // SUCCESS PAGE
+    // ========================================
     public function success()
     {
         return view('infak.success');
     }
 
-    private function getBulanList()
-    {
-        return ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-    }
-
+    // ========================================
+    // GET INFAK SANTRI (PER BULAN)
+    // ========================================
     private function getInfakSantri($santriId)
     {
-        $infaks = Infak::where('santri_id', $santriId)->get();
-        $bulanList = $this->getBulanList();
         $tahun = date('Y');
+        $bulanList = $this->getBulanList();
+
+        // Ambil semua infak santri di tahun ini
+        $infaks = Infak::where('santri_id', $santriId)
+                      ->where('tahun', $tahun)
+                      ->get()
+                      ->keyBy('bulan');   // key = bulan (angka)
+
         $result = [];
 
-        foreach ($bulanList as $bulan) {
-            $infak = $infaks->where('bulan', $bulan)->where('tahun', $tahun)->first();
+        foreach ($bulanList as $bulanAngka => $bulanNama) {
+            $infak = $infaks->get($bulanAngka);
+
             $result[] = [
-                'bulan' => $bulan,
+                'bulan' => $bulanNama,
+                'bulan_angka' => $bulanAngka,
                 'tahun' => $tahun,
                 'status' => $infak ? $infak->status : 'belum_bayar',
                 'id' => $infak ? $infak->id : null,
+                'jumlah' => $infak ? $infak->jumlah : 0,
+                'tanggal_bayar' => $infak && $infak->tanggal_bayar
+                                    ? $infak->tanggal_bayar->format('d M Y')
+                                    : null,
             ];
         }
 

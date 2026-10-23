@@ -39,7 +39,7 @@ class DashboardController extends Controller
         $totalGuru = Guru::count();
         $guruAktif = Guru::where('is_active', true)->count();
         $guruNonaktif = Guru::where('is_active', false)->count();
-        $guruTerbaru = Guru::latest()->limit(3)->get();
+        $guruTerbaru = Guru::latest()->limit(5)->get();
 
         // ========================================
         // STATISTIK SANTRI
@@ -47,7 +47,7 @@ class DashboardController extends Controller
         $totalSantri = Santri::count();
         $santriAktif = Santri::where('is_active', true)->count();
         $santriNonaktif = Santri::where('is_active', false)->count();
-        $santriTerbaru = Santri::latest()->limit(3)->get();
+        $santriTerbaru = Santri::latest()->limit(5)->get();
 
         // ========================================
         // STATISTIK ISMA
@@ -55,7 +55,7 @@ class DashboardController extends Controller
         $totalIsma = Isma::count();
         $ismaAktif = Isma::where('is_active', true)->count();
         $ismaNonaktif = Isma::where('is_active', false)->count();
-        $ismaTerbaru = Isma::latest()->limit(3)->get();
+        $ismaTerbaru = Isma::latest()->limit(5)->get();
 
         // ========================================
         // STATISTIK FASILITAS
@@ -63,92 +63,98 @@ class DashboardController extends Controller
         $totalFasilitas = Fasilitas::count();
         $fasilitasAktif = Fasilitas::where('is_active', true)->count();
         $fasilitasNonaktif = Fasilitas::where('is_active', false)->count();
-        $fasilitasTerbaru = Fasilitas::latest()->limit(3)->get();
+        $fasilitasTerbaru = Fasilitas::latest()->limit(5)->get();
 
         // ========================================
-        // STATISTIK INFAK (SESUAIKAN DENGAN STRUKTUR DB)
-        // ========================================
+// STATISTIK INFAK
+// ========================================
+$selectedYear = $request->input('infak_year', date('Y'));
+$currentYear = (int) date('Y');
+$currentMonth = (int) date('m');
 
-        $selectedYear = $request->input('infak_year', date('Y'));
-        $currentYear = date('Y');
-        $currentMonth = date('m');
+// Nama bulan
+$namaBulan = [
+    1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+    5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Agu',
+    9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'
+];
 
-        // 1. Total Infak Tahun Ini (pakai kolom `tahun`)
-        $totalInfakTahunIni = Infak::where('tahun', $selectedYear)->sum('jumlah');
+// 1. Total Infak Tahun Ini (LUNAS saja)
+$totalInfakTahunIni = Infak::where('tahun', $selectedYear)
+                            ->where('status', 'lunas')
+                            ->sum('jumlah');
 
-        // 2. Total Infak Bulan Ini (pakai `bulan` & `tahun`)
-        $totalInfakBulanIni = Infak::where('bulan', $currentMonth)
-                                    ->where('tahun', $currentYear)
-                                    ->sum('jumlah');
+// 2. Total Infak Bulan Ini (LUNAS saja)
+$totalInfakBulanIni = Infak::where('bulan', $currentMonth)
+                            ->where('tahun', $currentYear)
+                            ->where('status', 'lunas')
+                            ->sum('jumlah');
 
-        // 3. Total Infak Hari Ini (pakai `tanggal_bayar`)
-        $totalInfakHariIni = Infak::whereDate('tanggal_bayar', date('Y-m-d'))
-                                    ->sum('jumlah');
+// 3. Total Infak Hari Ini (LUNAS saja)
+$totalInfakHariIni = Infak::whereDate('tanggal_bayar', date('Y-m-d'))
+                            ->where('status', 'lunas')
+                            ->sum('jumlah');
 
-        // 4. Rata-rata Infak per Transaksi
-        $rataRataInfakBulanan = Infak::where('tahun', $selectedYear)->avg('jumlah') ?? 0;
+// 4. Rata-rata Infak (LUNAS saja)
+$rataRataInfakBulanan = Infak::where('tahun', $selectedYear)
+                              ->where('status', 'lunas')
+                              ->avg('jumlah') ?? 0;
 
-        // 5. Data Infak Per Bulan (untuk grafik bulanan)
-        $namaBulan = [
-            1 => 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-            'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
-        ];
+// 5. Data Infak Per Bulan (LUNAS saja)
+$infakPerBulan = [];
+$totalBulanan = 0;
 
-        $namaBulanLengkap = [
-            1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-        ];
+foreach ($namaBulan as $month => $nama) {
+    $total = Infak::where('bulan', $month)
+                  ->where('tahun', $selectedYear)
+                  ->where('status', 'lunas')
+                  ->sum('jumlah');
 
-        $infakPerBulan = [];
-        $totalBulanan = 0;
+    $infakPerBulan[] = [
+        'bulan' => $nama,
+        'bulan_angka' => $month,
+        'total' => (float) $total,
+    ];
 
-        for ($month = 1; $month <= 12; $month++) {
-                $total = Infak::where(function($q) use ($month, $namaBulan, $namaBulanLengkap) {
-                $q->where('bulan', $month)                                  // 1
-                  ->orWhere('bulan', $namaBulan[$month])                    // Jan
-                  ->orWhere('bulan', $namaBulanLengkap[$month])             // Januari
-                  ->orWhere('bulan', str_pad($month, 2, '0', STR_PAD_LEFT)); // 01
-            })
-            ->where('tahun', $selectedYear)
-            ->sum('jumlah');
+    $totalBulanan += $total;
+}
 
-            $infakPerBulan[] = [
-                'bulan' => $namaBulan[$month],
-                'bulan_angka' => $month,
-                'total' => (float) $total,
-            ];
+// 6. Data Infak Per Tahun (LUNAS saja)
+$infakPerTahun = [];
+$totalTahunan = 0;
 
-            $totalBulanan += $total;
-        }
+for ($i = 4; $i >= 0; $i--) {
+    $year = $currentYear - $i;
+    $total = Infak::where('tahun', $year)
+                  ->where('status', 'lunas')
+                  ->sum('jumlah');
 
-        // 6. Data Infak Per Tahun (5 tahun terakhir)
-        $infakPerTahun = [];
-        $totalTahunan = 0;
+    $infakPerTahun[] = [
+        'tahun' => $year,
+        'total' => (float) $total,
+    ];
 
-        for ($i = 4; $i >= 0; $i--) {
-            $year = $currentYear - $i;
-            $total = Infak::where('tahun', $year)->sum('jumlah');
+    $totalTahunan += $total;
+}
 
-            $infakPerTahun[] = [
-                'tahun' => $year,
-                'total' => (float) $total,
-            ];
+// 7. Infak Terbaru (LUNAS saja)
+$infakTerbaru = Infak::where('status', 'lunas')
+                    ->latest('tanggal_bayar')
+                    ->limit(5)
+                    ->get();
 
-            $totalTahunan += $total;
-        }
+// 8. Daftar Tahun untuk Filter
+$tahunList = Infak::select('tahun')
+                  ->distinct()
+                  ->orderBy('tahun', 'desc')
+                  ->pluck('tahun');
 
-        // 7. Infak Terbaru
-        $infakTerbaru = Infak::latest('tanggal_bayar')->limit(5)->get();
+if (!$tahunList->contains($currentYear)) {
+    $tahunList->prepend($currentYear);
+}
 
-        // 8. Daftar Tahun untuk Filter
-        $tahunList = Infak::select('tahun')
-                          ->distinct()
-                          ->orderBy('tahun', 'desc')
-                          ->pluck('tahun');
-
-        if (!$tahunList->contains($currentYear)) {
-            $tahunList->prepend($currentYear);
-        }
+// 9. Total Pending (untuk notifikasi)
+$totalPending = Infak::where('status', 'pending')->count();
 
         return view('admin.dashboard', compact(
             'user',
@@ -192,7 +198,8 @@ class DashboardController extends Controller
             'infakTerbaru',
             'tahunList',
             'totalBulanan',
-            'totalTahunan'
+            'totalTahunan',
+            'totalPending'
         ));
     }
 }
