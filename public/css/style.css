@@ -1,0 +1,23 @@
+:root {
+    --primary-color: #1a6e18;
+    --secondary-color: #fff;
+    --background-color: #010101;
+    --hover-color: #00ff00;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    text-decoration: none;
+}
+
+body {
+    font-family: "poppins", sans-serif;
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding-top: 80px;
+    /* min-height: 2000px;*/
+}

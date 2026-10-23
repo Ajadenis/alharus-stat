@@ -1,0 +1,569 @@
+/* ========================================
+   LAYOUT WRAPPER
+   ======================================== */
+
+:root {
+    --primary-color: #1a6e18;
+    --secondary-color: #fff;
+    --background-color: #010101;
+    --hover-color: #00ff00;
+}
+
+.kegiatan-wrapper {
+    display: flex;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 4%;
+}
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
+.sidebar {
+    flex: 0 0 280px;
+    order: 2;
+    color: var(--background-color);
+}
+
+.sidebar-widget {
+    background: #f8f9fa;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    background-color: #cccccc;
+}
+
+.sidebar-widget h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* ========================================
+   SEARCH WIDGET
+   ======================================== */
+.search-box {
+    display: flex;
+    gap: 0.5rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 2px solid #ddd;
+}
+
+.search-box:focus-within {
+    border-color: var(--primary-color);
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.search-btn {
+    padding: 0.8rem 1.2rem;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.search-btn:hover {
+    background: var(--hover-color);
+}
+
+.reset-search {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: #dc3545;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.reset-search:hover {
+    text-decoration: underline;
+}
+
+/* ========================================
+   KATEGORI WIDGET
+   ======================================== */
+.kategori-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.kategori-list li {
+    margin-bottom: 0.5rem;
+}
+
+.kategori-list li a {
+    display: block;
+    padding: 0.5rem 0.8rem;
+    color: #333;
+    text-decoration: none;
+    border-radius: 0.3rem;
+    transition: all 0.3s ease;
+}
+
+.kategori-list li a:hover {
+    background: #e9ecef;
+}
+
+.kategori-list li a.active {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* ========================================
+   KEGIATAN TERBARU WIDGET
+   ======================================== */
+.terbaru-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.terbaru-list li {
+    margin-bottom: 0.8rem;
+}
+
+.terbaru-list li a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.terbaru-item {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background 0.3s ease;
+}
+
+.terbaru-item:hover {
+    background: #e9ecef;
+}
+
+.terbaru-thumb {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.terbaru-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.terbaru-info h4 {
+    font-size: 0.9rem;
+    margin: 0 0 0.3rem 0;
+    line-height: 1.3;
+}
+
+.terbaru-date {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.terbaru-date i {
+    margin-right: 0.2rem;
+}
+
+/* ========================================
+   KEGIATAN TERKAIT WIDGET
+   ======================================== */
+.terkait-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.terkait-list li {
+    margin-bottom: 0.8rem;
+}
+
+.terkait-list li a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background 0.3s ease;
+}
+
+.terkait-list li a:hover {
+    background: #e9ecef;
+}
+
+.terkait-item h4 {
+    font-size: 0.95rem;
+    margin: 0 0 0.3rem 0;
+}
+
+.terkait-date {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.terkait-date i {
+    margin-right: 0.2rem;
+}
+
+/* ========================================
+   KEGIATAN UTAMA (KONTEN)
+   ======================================== */
+.kegiatan {
+    flex: 1;
+    order: 1;
+}
+
+.kegiatan h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+}
+
+/* ========================================
+   HERO SECTION
+   ======================================== */
+.kegiatan-hero {
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--background-color)
+    );
+    color: #fff;
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.kegiatan-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.kegiatan-hero p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* ========================================
+   ROW KEGIATAN
+   ======================================== */
+.row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    background-color: #cccccc;
+}
+
+.row:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.kegiatan-img {
+    flex: 0 0 300px;
+    height: 200px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.kegiatan-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.row:hover .kegiatan-img img {
+    transform: scale(1.05);
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.content .badge {
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    width: fit-content;
+}
+
+.content h3 {
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--primary-color);
+}
+
+.content .meta-info {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.8rem;
+}
+
+.content .meta-info i {
+    margin-right: 0.3rem;
+}
+
+.content p {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+    color: #000000;
+}
+
+.content .cta {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+.content .cta:hover {
+    background: #33ff00;
+    transform: translateX(5px);
+}
+.detail-description p {
+    white-space: pre-line;
+}
+
+/* ========================================
+   EMPTY STATE
+   ======================================== */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #000000;
+}
+
+.empty-state i {
+    color: #ddd;
+}
+
+.empty-state .sub-text {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.empty-state .cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.8rem 2rem;
+    background: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0.5rem;
+}
+
+/* ========================================
+   DETAIL HALAMAN
+   ======================================== */
+.kegiatan-detail {
+    flex: 1;
+    order: 1;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+}
+
+.breadcrumb a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb .separator {
+    color: #ccc;
+}
+
+.breadcrumb .current {
+    color: #333;
+}
+
+.detail-content .badge {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.detail-content h1 {
+    font-size: 2.2rem;
+    margin: 0.5rem 0;
+    color: #333;
+}
+
+.detail-content .meta-info {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.detail-content .meta-info i {
+    margin-right: 0.3rem;
+}
+
+.detail-image {
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detail-description {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    color: #000000;
+}
+
+.btn-back {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: #6c757d;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: background 0.3s ease;
+}
+
+.btn-back:hover {
+    background: #5a6268;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 992px) {
+    .kegiatan-wrapper {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        flex: 1;
+        order: 2;
+    }
+
+    .kegiatan {
+        order: 1;
+    }
+
+    .kegiatan-detail {
+        order: 1;
+    }
+
+    .sidebar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+
+    .kegiatan-img {
+        flex: 1;
+        height: 200px;
+        width: 100%;
+    }
+
+    .sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .kegiatan-hero h1 {
+        font-size: 2rem;
+    }
+
+    .detail-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .detail-content .meta-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .kegiatan-wrapper {
+        padding: 1rem 2%;
+    }
+
+    .kegiatan-img {
+        height: 150px;
+    }
+
+    .content h3 {
+        font-size: 1.1rem;
+    }
+
+    .content p {
+        font-size: 0.85rem;
+    }
+
+    .sidebar-widget {
+        padding: 1rem;
+    }
+}

@@ -1,0 +1,722 @@
+/* ========================================
+   ADMIN INFAK - ENHANCED
+   ======================================== */
+
+.admin-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+.admin-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-header-section .header-left h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-header-section .header-left h2 i {
+    color: var(--primary-color);
+}
+
+.admin-header-section .header-left .subtitle {
+    color: #888;
+    margin: 0.2rem 0 0 2.2rem;
+    font-size: 0.9rem;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   STATS BADGE
+   ======================================== */
+.stats-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.stats-badge.total {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.stats-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.stats-badge.lunas {
+    background: #d4edda;
+    color: #155724;
+}
+
+.stats-badge.belum {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ========================================
+   ALL ACCEPT BUTTON
+   ======================================== */
+.btn-all-accept {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-all-accept:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+}
+
+.btn-all-accept:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ========================================
+   INFRAK BADGE
+   ======================================== */
+.infak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 2rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.infak-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.infak-badge.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.infak-badge.success .dot {
+    background: #28a745;
+}
+
+.infak-badge.warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.infak-badge.warning .dot {
+    background: #ffc107;
+}
+
+.infak-badge.danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.infak-badge.danger .dot {
+    background: #dc3545;
+}
+
+/* ========================================
+   TABLE - ENHANCED
+   ======================================== */
+.table-container {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    flex: 1;
+}
+
+.table-header-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.table-header-toolbar .table-title {
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.table-header-toolbar .table-title i {
+    color: var(--primary-color);
+}
+
+.table-header-toolbar .table-title .count {
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    padding: 0.1rem 0.6rem;
+    font-size: 0.7rem;
+}
+
+.table-header-toolbar .table-info {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.admin-table thead {
+    background: #f8f9fa;
+}
+
+.admin-table th {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid #e0e0e0;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ========================================
+   BUKTI IMAGE
+   ======================================== */
+.bukti-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.3rem;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.bukti-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   RESPONSIVE / MEDIA QUERY
+   ======================================== */
+
+/* ========================================
+   1. PC / DESKTOP (min-width: 1200px)
+   ======================================== */
+@media (min-width: 1200px) {
+    .admin-wrapper {
+        padding: 0 1.5rem;
+        min-height: 100vh;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 1.8rem;
+    }
+
+    .btn-all-accept {
+        padding: 0.7rem 1.8rem;
+        font-size: 1rem;
+    }
+
+    .admin-table {
+        font-size: 1rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 1rem 1.2rem;
+    }
+
+    .bukti-preview {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* ========================================
+   2. LAPTOP (992px - 1199px)
+   ======================================== */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .admin-wrapper {
+        padding: 0 1rem;
+        min-height: 100vh;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 1.6rem;
+    }
+
+    .btn-all-accept {
+        padding: 0.6rem 1.4rem;
+        font-size: 0.95rem;
+    }
+
+    .admin-table {
+        font-size: 0.9rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.8rem 1rem;
+    }
+}
+
+/* ========================================
+   3. TABLET (768px - 991px)
+   ======================================== */
+@media (min-width: 768px) and (max-width: 991px) {
+    .admin-wrapper {
+        padding: 0 0.8rem;
+        min-height: 100vh !important;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .admin-header-section {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 1.3rem;
+        white-space: nowrap;
+    }
+
+    .admin-header-section .header-left .subtitle {
+        display: none;
+    }
+
+    .header-right {
+        flex-shrink: 0;
+    }
+
+    .btn-all-accept {
+        padding: 0.5rem 1.1rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    /* TABLE - FULL HEIGHT */
+    .table-container {
+        flex: 1;
+        border-radius: 0.8rem;
+    }
+
+    .table-header-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .admin-table {
+        font-size: 0.85rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.6rem 0.7rem;
+    }
+
+    .bukti-preview {
+        width: 36px;
+        height: 36px;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .filter-group {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .filter-group.search-group {
+        min-width: unset;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-filter,
+    .btn-reset {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .pagination-wrapper .pagination li a,
+    .pagination-wrapper .pagination li span {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+        padding: 0 0.5rem;
+    }
+
+    .action-buttons {
+        gap: 0.2rem;
+    }
+
+    .btn-action {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
+    .infak-badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.5rem;
+    }
+}
+
+/* ========================================
+   4. HP / MOBILE (max-width: 767px)
+   ======================================== */
+@media (max-width: 767px) {
+    .admin-wrapper {
+        padding: 0 0.5rem;
+        min-height: 100vh !important;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .admin-header-section {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .admin-header-section .header-left {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .admin-header-section .header-left .subtitle {
+        display: none;
+    }
+
+    .header-right {
+        width: auto;
+        flex-shrink: 0;
+    }
+
+    .header-right .btn-all-accept {
+        width: auto;
+        justify-content: center;
+        white-space: nowrap;
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .header-right .btn-all-accept i {
+        font-size: 0.8rem;
+    }
+
+    /* TABLE - FULL HEIGHT */
+    .table-container {
+        flex: 1;
+        border-radius: 0.6rem;
+    }
+
+    .table-header-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+        padding: 0.8rem 1rem;
+    }
+
+    .table-header-toolbar .table-title {
+        font-size: 0.9rem;
+    }
+
+    .table-header-toolbar .table-info {
+        font-size: 0.75rem;
+    }
+
+    .admin-table {
+        font-size: 0.75rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.4rem 0.5rem;
+    }
+
+    .admin-table th {
+        font-size: 0.65rem;
+    }
+
+    .bukti-preview {
+        width: 32px;
+        height: 32px;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filter-group {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .filter-group.search-group {
+        min-width: unset;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 0.3rem;
+    }
+
+    .btn-filter,
+    .btn-reset {
+        width: 100%;
+        justify-content: center;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .pagination-wrapper {
+        padding: 0.5rem 0.8rem;
+    }
+
+    .pagination-wrapper .pagination li a,
+    .pagination-wrapper .pagination li span {
+        min-width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+        padding: 0 0.4rem;
+    }
+
+    .action-buttons {
+        gap: 0.2rem;
+    }
+
+    .btn-action {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+    }
+
+    .infak-badge {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.4rem;
+    }
+
+    .infak-badge .dot {
+        width: 4px;
+        height: 4px;
+    }
+
+    .empty-state-admin i {
+        font-size: 2rem;
+    }
+
+    .empty-state-admin h4 {
+        font-size: 0.8rem;
+    }
+
+    .empty-state-admin p {
+        font-size: 0.75rem;
+    }
+
+    .alert {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* ========================================
+   5. HP KECIL (max-width: 480px)
+   ======================================== */
+@media (max-width: 480px) {
+    .admin-wrapper {
+        padding: 0 0.3rem;
+        min-height: 100vh !important;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 0.9rem;
+    }
+
+    .header-right .btn-all-accept {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .header-right .btn-all-accept i {
+        font-size: 0.7rem;
+    }
+
+    .table-header-toolbar .table-title {
+        font-size: 0.8rem;
+    }
+
+    .table-header-toolbar .table-info {
+        font-size: 0.65rem;
+    }
+
+    .admin-table {
+        font-size: 0.65rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.3rem 0.4rem;
+    }
+
+    .admin-table th {
+        font-size: 0.55rem;
+    }
+
+    .bukti-preview {
+        width: 28px;
+        height: 28px;
+    }
+
+    .btn-action {
+        width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+    }
+
+    .pagination-wrapper .pagination li a,
+    .pagination-wrapper .pagination li span {
+        min-width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+        padding: 0 0.3rem;
+    }
+
+    .infak-badge {
+        font-size: 0.5rem;
+        padding: 0.05rem 0.3rem;
+    }
+
+    .infak-badge .dot {
+        width: 3px;
+        height: 3px;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .btn-filter,
+    .btn-reset {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .empty-state-admin i {
+        font-size: 1.5rem;
+    }
+
+    .empty-state-admin h4 {
+        font-size: 0.7rem;
+    }
+
+    .empty-state-admin p {
+        font-size: 0.65rem;
+    }
+
+    .alert {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+    }
+}

@@ -1,0 +1,1010 @@
+/* ========================================
+   ROOT VARIABLES
+   ======================================== */
+:root {
+    --primary-color: #1a6e18;
+    --secondary-color: #fff;
+    --background-color: #010101;
+    --hover-color: #00ff00;
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
+    --radius: 1.5rem;
+    --radius-sm: 0.75rem;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   BODY & BACKGROUND
+   ======================================== */
+.infak-page {
+    background: var(--secondary-color);
+    min-height: 100vh;
+}
+
+/* ========================================
+   HERO - TANPA GAP DENGAN NAVBAR
+   ======================================== */
+.infak-hero {
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--background-color)
+    );
+    color: #fff;
+    padding: 3.5rem 2rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    margin-top: 0; /* HAPUS margin-top */
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px solid rgba(255, 255, 255, 0.1);
+}
+
+.infak-hero::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+}
+
+.infak-hero::after {
+    content: "";
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(30px, -30px);
+    }
+}
+
+.infak-hero .logo-hero {
+    height: 65px;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.1));
+}
+
+.infak-hero h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+}
+
+.infak-hero h1 i {
+    margin-right: 0.5rem;
+}
+
+.infak-hero p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+/* ========================================
+   WRAPPER & CARD - ENHANCED
+   ======================================== */
+.infak-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 4% 3rem;
+}
+
+.infak-card {
+    background: #cccccc;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: var(--transition);
+}
+
+.infak-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-4px);
+}
+
+.infak-card-body {
+    padding: 2.5rem;
+}
+
+/* ========================================
+   SEARCH SECTION - ENHANCED
+   ======================================== */
+.search-section {
+    margin-bottom: 2rem;
+}
+
+.search-box {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: var(--radius-sm);
+    padding: 0.3rem;
+    border: 2px solid #e8e8e8;
+    transition: var(--transition);
+}
+
+.search-box:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(26, 110, 24, 0.1);
+    background: #fff;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    background: transparent;
+    color: #333;
+    font-family: "Poppins", sans-serif;
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: #aaa;
+}
+
+.search-box .btn-search {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(26, 110, 24, 0.25);
+    font-family: "Poppins", sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.search-box .btn-search::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.6s ease;
+}
+
+.search-box .btn-search:hover::before {
+    left: 100%;
+}
+
+.search-box .btn-search:hover {
+    background: #145214;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(26, 110, 24, 0.35);
+}
+
+.search-box .btn-search:active {
+    transform: translateY(0);
+}
+
+.search-box .btn-search i {
+    font-size: 1.1rem;
+    transition: var(--transition);
+}
+
+.search-box .btn-search:hover i {
+    transform: scale(1.15);
+}
+
+.search-hint {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.search-hint i {
+    color: var(--primary-color);
+}
+
+/* ========================================
+   LOADING - ANIMATED
+   ======================================== */
+.loading-spinner {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.loading-spinner .spinner-border {
+    width: 3.5rem;
+    height: 3.5rem;
+    color: var(--primary-color);
+    border-width: 0.25rem;
+}
+
+.loading-spinner p {
+    margin-top: 1rem;
+    color: #888;
+    font-weight: 500;
+}
+
+/* ========================================
+   RESULT SECTION - FADE IN
+   ======================================== */
+.result-section {
+    display: none;
+    margin-top: 2rem;
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   SANTRI CARD - ENHANCED
+   ======================================== */
+.santri-card {
+    background: linear-gradient(135deg, #f8fafc, #f0f4f8);
+    padding: 1.5rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: #333;
+    border: 1px solid #e8e8e8;
+    transition: var(--transition);
+}
+
+.santri-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.santri-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(26, 110, 24, 0.15);
+}
+
+.santri-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1a2332;
+}
+
+.santri-name i {
+    color: var(--primary-color);
+    margin-right: 0.3rem;
+}
+
+.santri-class {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.2rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.santri-class i {
+    color: var(--primary-color);
+}
+
+.santri-wali {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.santri-wali i {
+    color: var(--primary-color);
+}
+
+/* ========================================
+   INFRAK TABLE - MODERN
+   ======================================== */
+.infak-table {
+    margin-top: 2rem;
+    color: #333;
+}
+
+.infak-table .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.infak-table .table-header h6 {
+    font-weight: 600;
+    margin: 0;
+    color: #1a2332;
+    font-size: 1.1rem;
+}
+
+.infak-table .table-header h6 i {
+    color: var(--primary-color);
+    margin-right: 0.3rem;
+}
+
+.infak-table .table-header .tahun-text {
+    color: #999;
+    font-weight: 400;
+    background: #f0f4f8;
+    padding: 0.2rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+}
+
+.infak-table table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.infak-table th {
+    text-align: left;
+    padding: 0.8rem 1rem;
+    background: #f0f4f8;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.infak-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.infak-table tbody tr {
+    transition: var(--transition);
+}
+
+.infak-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.infak-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.infak-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+/* ========================================
+   STATUS BADGE - ENHANCED
+   ======================================== */
+.status-badge {
+    padding: 0.25rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.status-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-lunas {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-lunas::before {
+    background: #28a745;
+}
+
+.status-belum {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-belum::before {
+    background: #dc3545;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-pending::before {
+    background: #ffc107;
+}
+
+/* ========================================
+   BUTTON BAYAR - MODERN
+   ======================================== */
+.btn-bayar {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.35rem 1.2rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: "Poppins", sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.btn-bayar:hover {
+    background: #145214;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 110, 24, 0.3);
+    color: #fff;
+}
+
+.btn-bayar i {
+    font-size: 0.8rem;
+}
+
+/* ========================================
+   PAYMENT SECTION - ELEGANT
+   ======================================== */
+.payment-section {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: var(--radius-sm);
+    margin-top: 2rem;
+    display: none;
+    color: #333;
+    border: 1px solid #e8e8e8;
+    animation: fadeInUp 0.4s ease;
+}
+
+.payment-section h5 {
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: #1a2332;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.payment-section h5 i {
+    color: var(--primary-color);
+}
+
+.payment-method {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+.payment-method label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin: 0;
+    color: #333;
+    background: #fff;
+}
+
+.payment-method label:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.payment-method input[type="radio"] {
+    display: none;
+}
+
+.payment-method input[type="radio"]:checked + label {
+    border-color: var(--primary-color);
+    background: rgba(26, 110, 24, 0.05);
+    box-shadow: 0 4px 15px rgba(26, 110, 24, 0.08);
+}
+
+/* ========================================
+   PAYMENT INFO - GLASS
+   ======================================== */
+.payment-info {
+    display: none;
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--primary-color);
+    color: #333;
+    animation: fadeInUp 0.3s ease;
+}
+
+.payment-info.show {
+    display: block;
+}
+
+.payment-info .rekening {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    background: rgba(26, 110, 24, 0.05);
+    padding: 0.3rem 1rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+}
+
+.payment-info img {
+    max-width: 200px;
+    display: block;
+    margin: 0.5rem auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* ========================================
+   QRIS PLACEHOLDER - MODERN
+   ======================================== */
+.qris-placeholder {
+    text-align: center;
+    padding: 2rem;
+    background: #fff;
+    border-radius: var(--radius-sm);
+    border: 2px dashed #e0e0e0;
+    transition: var(--transition);
+}
+
+.qris-placeholder:hover {
+    border-color: var(--primary-color);
+}
+
+.qris-placeholder i {
+    font-size: 4rem;
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.qris-placeholder .qris-simulator {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    max-width: 120px;
+    margin: 0.5rem auto;
+}
+
+.qris-placeholder .qris-simulator .qris-block {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.qris-placeholder .qris-simulator .qris-block.dark {
+    background: var(--primary-color);
+}
+
+.qris-placeholder .qris-simulator .qris-block.light {
+    background: #fff;
+}
+
+.qris-placeholder p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.qris-placeholder small {
+    color: #999;
+    font-size: 0.8rem;
+}
+
+/* ========================================
+   FILE UPLOAD - MODERN
+   ======================================== */
+.file-upload {
+    margin-top: 1.2rem;
+}
+
+.file-upload label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.3rem;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.file-upload label i {
+    color: var(--primary-color);
+    margin-right: 0.3rem;
+}
+
+.file-upload input[type="file"] {
+    padding: 0.6rem;
+    border: 2px dashed #e0e0e0;
+    border-radius: var(--radius-sm);
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    background: #fff;
+    color: #333;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.file-upload input[type="file"]:hover {
+    border-color: var(--primary-color);
+    background: rgba(26, 110, 24, 0.02);
+}
+
+.file-upload input[type="text"] {
+    padding: 0.6rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: var(--radius-sm);
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    background: #fff;
+    color: #333;
+    transition: var(--transition);
+}
+
+.file-upload input[type="text"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(26, 110, 24, 0.05);
+}
+
+.file-upload small {
+    display: block;
+    margin-top: 0.3rem;
+    color: #999;
+    font-size: 0.8rem;
+}
+
+/* ========================================
+   TOTAL SECTION - MODERN
+   ======================================== */
+.total-section {
+    text-align: center;
+    margin-top: 2rem;
+    display: none;
+    padding: 1.5rem;
+    background: linear-gradient(
+        135deg,
+        rgba(26, 110, 24, 0.05),
+        rgba(45, 138, 42, 0.05)
+    );
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(26, 110, 24, 0.1);
+    animation: fadeInUp 0.4s ease;
+}
+
+.total-section h4 {
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.4rem;
+}
+
+.total-section h4 span {
+    font-size: 1.8rem;
+}
+
+.btn-bayar-sekarang {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.9rem 3rem;
+    border-radius: 3rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: "Poppins", sans-serif;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 20px rgba(26, 110, 24, 0.3);
+}
+
+.btn-bayar-sekarang:hover {
+    background: #145214;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 40px rgba(26, 110, 24, 0.4);
+}
+
+.btn-bayar-sekarang:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn-bayar-sekarang i {
+    margin-right: 0.5rem;
+}
+
+.total-section .text-muted {
+    display: block;
+    margin-top: 0.5rem;
+    color: #999 !important;
+    font-size: 0.8rem;
+}
+
+/* ========================================
+   SWEETALERT CUSTOM
+   ======================================== */
+.swal2-popup {
+    border-radius: var(--radius) !important;
+    font-family: "Poppins", sans-serif !important;
+}
+
+.swal2-confirm {
+    background: var(--primary-color) !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .infak-hero {
+        padding: 2.5rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .infak-hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .infak-card-body {
+        padding: 1.5rem;
+    }
+
+    .search-box {
+        flex-direction: column;
+        padding: 0.5rem;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 0.8rem;
+        background: #f8f9fa;
+        border-radius: var(--radius-sm);
+    }
+
+    .search-box .btn-search {
+        width: 100%;
+        justify-content: center;
+        padding: 0.8rem;
+    }
+
+    .santri-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .payment-method {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .payment-method label {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .infak-table {
+        overflow-x: auto;
+    }
+
+    .infak-table table {
+        font-size: 0.85rem;
+        min-width: 450px;
+    }
+
+    .btn-bayar-sekarang {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+
+    .total-section h4 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .infak-hero {
+        padding: 2rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .infak-hero h1 {
+        font-size: 1.6rem;
+    }
+
+    .infak-hero .logo-hero {
+        height: 45px;
+    }
+
+    .infak-card-body {
+        padding: 1rem;
+    }
+
+    .santri-avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+    .santri-name {
+        font-size: 1.1rem;
+    }
+
+    .search-box input {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .search-box .btn-search {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .infak-table th,
+    .infak-table td {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .payment-section {
+        padding: 1rem;
+    }
+
+    .payment-info {
+        padding: 1rem;
+    }
+
+    .payment-info .rekening {
+        font-size: 0.9rem;
+    }
+
+    .payment-info img {
+        max-width: 150px;
+    }
+
+    .btn-bayar-sekarang {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.2rem;
+    }
+
+    .btn-bayar {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.8rem;
+    }
+
+    .status-badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.6rem;
+    }
+
+    .qris-placeholder .qris-simulator .qris-block {
+        width: 22px;
+        height: 22px;
+    }
+
+    .file-upload input[type="file"],
+    .file-upload input[type="text"] {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+/* Mobile Kecil */
+@media (max-width: 360px) {
+    .infak-hero h1 {
+        font-size: 1.3rem;
+    }
+
+    .santri-avatar {
+        width: 50px;
+        height: 50px;
+    }
+
+    .santri-name {
+        font-size: 0.95rem;
+    }
+
+    .search-box input {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    .search-box .btn-search {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    .payment-method label {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .qris-placeholder .qris-simulator .qris-block {
+        width: 18px;
+        height: 18px;
+    }
+}
