@@ -46,6 +46,88 @@
         @enderror
     </div>
 
+    <div class="form-row">
+    <div class="form-group">
+        <label for="tahun_masuk">
+            Tahun Masuk (Angkatan) <span class="required">*</span>
+        </label>
+        <select 
+            name="tahun_masuk" 
+            id="tahun_masuk" 
+            class="form-control @error('tahun_masuk') is-invalid @enderror" 
+            required
+        >
+            <option value="">-- Pilih Tahun --</option>
+            @for($year = date('Y'); $year >= date('Y') - 10; $year--)
+                <option value="{{ $year }}" {{ old('tahun_masuk') == $year ? 'selected' : '' }}>
+                    {{ $year }}
+                </option>
+            @endfor
+        </select>
+        <small class="form-text">
+            <i class="bi bi-info-circle"></i> 
+            Tahun pertama santri masuk MDA (angkatan)
+        </small>
+        @error('tahun_masuk')
+            <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <div class="form-group">
+        <label for="kelas_sekarang">Kelas Sekarang</label>
+        <select 
+            name="kelas_sekarang" 
+            id="kelas_sekarang" 
+            class="form-control @error('kelas_sekarang') is-invalid @enderror"
+        >
+            <option value="">-- Otomatis --</option>
+            <option value="MDA 1" {{ old('kelas_sekarang') == 'MDA 1' ? 'selected' : '' }}>MDA 1</option>
+            <option value="MDA 2" {{ old('kelas_sekarang') == 'MDA 2' ? 'selected' : '' }}>MDA 2</option>
+            <option value="MDA 3" {{ old('kelas_sekarang') == 'MDA 3' ? 'selected' : '' }}>MDA 3</option>
+            <option value="MDA 4" {{ old('kelas_sekarang') == 'MDA 4' ? 'selected' : '' }}>MDA 4</option>
+        </select>
+        <small class="form-text">
+            <i class="bi bi-magic"></i> 
+            Kosongkan untuk **otomatis** dihitung dari tahun masuk
+        </small>
+        @error('kelas_sekarang')
+            <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
+
+{{-- ======================================== --}}
+{{-- STATUS SANTRI --}}
+{{-- ======================================== --}}
+<div class="form-group">
+    <label for="status_santri">
+        Status Santri <span class="required">*</span>
+    </label>
+    <select 
+        name="status_santri" 
+        id="status_santri" 
+        class="form-control @error('status_santri') is-invalid @enderror" 
+        required
+    >
+        <option value="aktif" {{ old('status_santri', 'aktif') == 'aktif' ? 'selected' : '' }}>
+            ✅ Aktif (Sedang Belajar)
+        </option>
+        <option value="lulus" {{ old('status_santri') == 'lulus' ? 'selected' : '' }}>
+            🎓 Lulus (Sudah Selesai)
+        </option>
+        <option value="keluar" {{ old('status_santri') == 'keluar' ? 'selected' : '' }}>
+            ❌ Keluar (Berhenti)
+        </option>
+    </select>
+    <small class="form-text">
+        <i class="bi bi-info-circle"></i> 
+        Status menentukan apakah santri masih wajib bayar infak
+    </small>
+    @error('status_santri')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
+
     <div class="form-group">
         <label for="kelas">Kelas <span class="required">*</span></label>
         <select name="kelas" id="kelas" class="form-control @error('kelas') is-invalid @enderror" required>

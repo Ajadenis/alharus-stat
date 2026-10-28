@@ -39,26 +39,54 @@
                 </div>
 
                 <!-- Result -->
-                <div id="resultSection" class="result-section">
+                <div id="resultSection" class="result-section" style="display:none;">
                     <!-- Santri Card -->
                     <div class="santri-card">
                         <img id="santriFoto" class="santri-avatar" src="{{ asset('images/default-avatar.png') }}" alt="Foto">
                         <div>
-                            <h4 class="santri-name"><i class="bi bi-person-circle"></i> <span id="santriNama">-</span></h4>
-                            <p class="santri-class"><i class="bi bi-mortarboard"></i> <span id="santriKelas">-</span></p>
-                            <p class="santri-wali"><i class="bi bi-person"></i> Wali: <span id="santriWali">-</span></p>
+                            <h4 class="santri-name">
+                                <i class="bi bi-person-circle"></i> 
+                                <span id="santriNama">-</span>
+                            </h4>
+                            <p class="santri-class">
+                                <i class="bi bi-mortarboard"></i> 
+                                <span id="santriKelas">-</span>
+                            </p>
+                            <p class="santri-angkatan">
+                                <i class="bi bi-calendar-check"></i> 
+                                Angkatan: <span id="santriAngkatan">-</span>
+                            </p>
+                            <p class="santri-wali">
+                                <i class="bi bi-person"></i> 
+                                Wali: <span id="santriWali">-</span>
+                            </p>
                         </div>
+                    </div>
+
+                    <!-- Dropdown Tahun -->
+                    <div class="tahun-selector">
+                        <label for="tahunSelect">
+                            <i class="bi bi-calendar3"></i> Pilih Tahun:
+                        </label>
+                        <select id="tahunSelect" class="form-control" onchange="gantiTahun(this.value)">
+                            <!-- Diisi via JavaScript -->
+                        </select>
                     </div>
 
                     <!-- Infak Table -->
                     <div class="infak-table">
                         <div class="table-header">
-                            <h6><i class="bi bi-calendar3"></i> Daftar Infak <span id="tahunDisplay" class="tahun-text"></span></h6>
+                            <h6>
+                                <i class="bi bi-list-ul"></i> 
+                                Daftar Infak <span id="tahunDisplay" class="tahun-text"></span>
+                            </h6>
                         </div>
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width:40px;"><input type="checkbox" id="selectAll"></th>
+                                    <th style="width:40px;">
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
                                     <th>Bulan</th>
                                     <th>Status</th>
                                     <th style="text-align:center;">Aksi</th>
@@ -69,7 +97,7 @@
                     </div>
 
                     <!-- Payment Section -->
-                    <div id="paymentSection" class="payment-section">
+                    <div id="paymentSection" class="payment-section" style="display:none;">
                         <h5><i class="bi bi-credit-card"></i> Metode Pembayaran</h5>
                         <div class="payment-method">
                             <input type="radio" name="metode" id="metodeTunai" value="tunai">
@@ -82,46 +110,25 @@
                             <label for="metodeQRIS"><i class="bi bi-qr-code"></i> QRIS</label>
                         </div>
 
-                        <!-- Transfer Info -->
+                        <!-- Info Transfer -->
                         <div id="infoTransfer" class="payment-info">
                             <p><strong><i class="bi bi-bank"></i> Transfer ke Rekening:</strong></p>
                             <p class="rekening">Bank BNI: 1234567890 a.n. Yayasan Al-Harus</p>
-                            <p style="margin-top:0.5rem; color:#888; font-size:0.85rem;">
-                                <i class="bi bi-info-circle"></i> Setelah transfer, upload bukti di bawah ini.
-                            </p>
                         </div>
 
-                        <!-- QRIS Info -->
+                        <!-- Info QRIS -->
                         <div id="infoQris" class="payment-info">
                             <p><strong><i class="bi bi-qr-code"></i> Scan QRIS:</strong></p>
                             <div class="qris-placeholder">
                                 <i class="bi bi-qr-code"></i>
-                                <div class="qris-simulator">
-                                    <div class="qris-block dark"></div>
-                                    <div class="qris-block light"></div>
-                                    <div class="qris-block dark"></div>
-                                    <div class="qris-block light"></div>
-                                    <div class="qris-block dark"></div>
-                                    <div class="qris-block light"></div>
-                                    <div class="qris-block dark"></div>
-                                    <div class="qris-block light"></div>
-                                    <div class="qris-block dark"></div>
-                                </div>
                                 <p>QRIS Code</p>
-                                <small>Scan QRIS di atas untuk pembayaran</small>
                             </div>
-                            <p style="margin-top:0.5rem; color:#888; font-size:0.85rem;">
-                                <i class="bi bi-info-circle"></i> Setelah scan, upload bukti di bawah ini.
-                            </p>
                         </div>
 
-                        <!-- Tunai Info -->
+                        <!-- Info Tunai -->
                         <div id="infoTunai" class="payment-info">
                             <p><strong><i class="bi bi-cash"></i> Pembayaran Tunai</strong></p>
                             <p>Bayar langsung ke bendahara madrasah.</p>
-                            <p style="color:#888; font-size:0.85rem;">
-                                <i class="bi bi-info-circle"></i> Setelah bayar, upload bukti atau minta konfirmasi admin.
-                            </p>
                         </div>
 
                         <!-- Upload Bukti -->
@@ -138,7 +145,7 @@
                     </div>
 
                     <!-- Total & Bayar -->
-                    <div id="totalSection" class="total-section">
+                    <div id="totalSection" class="total-section" style="display:none;">
                         <h4>Total: <span id="totalBayar">Rp 0</span></h4>
                         <button id="btnBayar" class="btn-bayar-sekarang">
                             <i class="bi bi-send"></i> Kirim Bukti & Konfirmasi
@@ -162,22 +169,12 @@
         let currentSantriId = null;
         let currentNominal = 50000;
         let selectedBulans = [];
+        let currentTahun = null;
+        let currentInfakData = [];
 
-        nisaInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') searchSantri();
-        });
-
-        btnCari.addEventListener('click', searchSantri);
-
-        // Event metode pembayaran
-        document.querySelectorAll('input[name="metode"]').forEach(el => {
-            el.addEventListener('change', function() {
-                document.querySelectorAll('.payment-info').forEach(info => info.classList.remove('show'));
-                const target = document.getElementById('info' + this.value.charAt(0).toUpperCase() + this.value.slice(1));
-                if (target) target.classList.add('show');
-            });
-        });
-
+        // ========================================
+        // SEARCH
+        // ========================================
         function searchSantri() {
             const nisa = nisaInput.value.trim();
             if (!nisa) {
@@ -199,11 +196,32 @@
             .then(response => response.json())
             .then(data => {
                 loading.style.display = 'none';
+
                 if (data.status === 'success') {
                     currentSantriId = data.data.santri.id;
                     currentNominal = data.data.nominal || 50000;
-                    displaySantri(data.data.santri);
-                    renderInfakTable(data.data.infak);
+                    currentTahun = data.data.tahun_default;
+
+                    // Display santri
+                    document.getElementById('santriNama').textContent = data.data.santri.nama;
+                    document.getElementById('santriKelas').textContent = data.data.santri.kelas || '-';
+                    document.getElementById('santriAngkatan').textContent = data.data.santri.tahun_masuk || '-';
+                    document.getElementById('santriWali').textContent = data.data.santri.nama_wali || '-';
+                    document.getElementById('santriFoto').src = data.data.santri.foto || '{{ asset("images/default-avatar.png") }}';
+
+                    // Isi dropdown tahun
+                    const tahunSelect = document.getElementById('tahunSelect');
+                    tahunSelect.innerHTML = '';
+                    data.data.tahun_infak.forEach(tahun => {
+                        const option = document.createElement('option');
+                        option.value = tahun;
+                        option.textContent = tahun;
+                        if (tahun == currentTahun) option.selected = true;
+                        tahunSelect.appendChild(option);
+                    });
+
+                    // Render tabel
+                    renderInfakTable(data.data.infak, currentTahun);
                     resultSection.style.display = 'block';
                 } else {
                     Swal.fire('Error', data.message || 'Santri tidak ditemukan!', 'error');
@@ -215,16 +233,37 @@
             });
         }
 
-        function displaySantri(santri) {
-    document.getElementById('santriNama').textContent = santri.nama;
-    document.getElementById('santriKelas').textContent = santri.kelas || '-';
-    document.getElementById('santriWali').textContent = santri.nama_wali || '-';
-    document.getElementById('santriFoto').src = santri.foto || '{{ asset("images/default-avatar.png") }}';
-    document.getElementById('tahunDisplay').textContent = '| Tahun ' + new Date().getFullYear();
-}
+        nisaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchSantri();
+        });
 
-        function renderInfakTable(infakData) {
-            window.currentInfakData = infakData;
+        btnCari.addEventListener('click', searchSantri);
+
+        // ========================================
+        // GANTI TAHUN
+        // ========================================
+        window.gantiTahun = function(tahun) {
+            currentTahun = parseInt(tahun);
+
+            fetch(`{{ route("infak.public.get-by-tahun") }}?santri_id=${currentSantriId}&tahun=${tahun}`, {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    renderInfakTable(data.data.infak, tahun);
+                }
+            });
+        };
+
+        // ========================================
+        // RENDER TABEL INFAK
+        // ========================================
+        function renderInfakTable(infakData, tahun) {
+            currentInfakData = infakData;
             const tbody = document.getElementById('infakTableBody');
             let html = '';
 
@@ -255,6 +294,7 @@
             });
 
             tbody.innerHTML = html;
+            document.getElementById('tahunDisplay').textContent = '| Tahun ' + tahun;
 
             // Select All
             document.getElementById('selectAll').addEventListener('change', function() {
@@ -271,13 +311,18 @@
             updateTotal();
         }
 
+        // ========================================
+        // UPDATE TOTAL
+        // ========================================
         function updateTotal() {
             const checkboxes = document.querySelectorAll('.infak-checkbox:checked');
             const total = checkboxes.length * currentNominal;
+            
             selectedBulans = Array.from(checkboxes).map(cb => {
                 const index = cb.dataset.index;
-                return window.currentInfakData[index]?.bulan_angka;
+                return currentInfakData[index]?.bulan_angka;
             });
+
             const totalSection = document.getElementById('totalSection');
             const paymentSection = document.getElementById('paymentSection');
 
@@ -291,6 +336,9 @@
             }
         }
 
+        // ========================================
+        // BAYAR BULAN
+        // ========================================
         window.bayarBulan = function(index) {
             const row = document.querySelectorAll('#infakTableBody tr')[index];
             const checkbox = row.querySelector('.infak-checkbox');
@@ -300,7 +348,20 @@
             }
         };
 
-        // Proses Bayar
+        // ========================================
+        // METODE PEMBAYARAN
+        // ========================================
+        document.querySelectorAll('input[name="metode"]').forEach(el => {
+            el.addEventListener('change', function() {
+                document.querySelectorAll('.payment-info').forEach(info => info.classList.remove('show'));
+                const target = document.getElementById('info' + this.value.charAt(0).toUpperCase() + this.value.slice(1));
+                if (target) target.classList.add('show');
+            });
+        });
+
+        // ========================================
+        // PROSES BAYAR
+        // ========================================
         document.getElementById('btnBayar').addEventListener('click', function() {
             const metode = document.querySelector('input[name="metode"]:checked');
             const bukti = document.getElementById('buktiUpload');
@@ -323,7 +384,7 @@
             const formData = new FormData();
             formData.append('santri_id', currentSantriId);
             formData.append('bulan', JSON.stringify(selectedBulans));
-            formData.append('tahun', new Date().getFullYear());
+            formData.append('tahun', currentTahun);   // 👈 TAHUN DARI DROPDOWN
             formData.append('metode', metode.value);
             formData.append('jumlah', selectedBulans.length * currentNominal);
             formData.append('bukti', bukti.files[0]);

@@ -34,7 +34,7 @@
         <a href="{{ route('fasilitas.index') }}">
             <i class="bi bi-building"></i> Fasilitas
         </a>
-        <a href="{{ route('infak.public') }}">
+        <a href="{{ route('infak.public.index') }}">
             <i class="bi bi-cash-stack"></i> Infak
         </a>
       </div>

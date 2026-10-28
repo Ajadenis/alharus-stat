@@ -40,10 +40,13 @@ Route::prefix('kegiatan')->name('kegiatan.')->group(function () {
     Route::get('/{slug}', [KegiatanController::class, 'show'])->name('show');
 });
 // Infak Public
-Route::get('/infak', [InfakPublicController::class, 'index'])->name('infak.public');
-Route::post('/infak/cari', [InfakPublicController::class, 'cariSantri'])->name('infak.public.cari');
-Route::post('/infak/upload', [InfakPublicController::class, 'uploadBukti'])->name('infak.public.upload');
-Route::get('/infak/success', [InfakPublicController::class, 'success'])->name('infak.public.success');
+Route::prefix('infak')->name('infak.')->group(function () {
+    Route::get('/', [InfakPublicController::class, 'index'])->name('public.index');
+    Route::post('/cari', [InfakPublicController::class, 'cariSantri'])->name('public.cari');
+    Route::get('/by-tahun', [InfakPublicController::class, 'getInfakByTahun'])->name('public.get-by-tahun');
+    Route::post('/upload', [InfakPublicController::class, 'uploadBukti'])->name('public.upload');
+    Route::get('/success', [InfakPublicController::class, 'success'])->name('public.success');
+});
 
 // ========================================
 // ROUTE AUTH

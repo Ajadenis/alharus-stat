@@ -36,7 +36,7 @@
         </div>
         <h2 class="mt-3">✅ Pembayaran Berhasil!</h2>
         <p class="text-muted">Bukti pembayaran telah diupload. Menunggu konfirmasi admin.</p>
-        <a href="{{ route('infak.public') }}" class="btn btn-success btn-lg mt-3">
+        <a href="{{ route('infak.public.index') }}" class="btn btn-success btn-lg mt-3">
             <i class="bi bi-arrow-left"></i> Kembali
         </a>
     </div>

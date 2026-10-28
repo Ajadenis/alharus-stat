@@ -4,40 +4,77 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Infak;
 
 class Santri extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'nisa',
         'nama',
         'foto',
         'nis',
+        'nisa',
         'kelas',
         'jenis_kelamin',
         'alamat',
         'tanggal_lahir',
         'nama_orang_tua',
-        'nama_wali',
-        'telepon_wali',
-        'status',
         'is_active',
+        'tahun_masuk',
+        'kelas_sekarang',
+        'status_santri',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'tanggal_lahir' => 'date',
+        'tahun_masuk' => 'integer',
     ];
 
+    // ========================================
+    // ACCESSOR
+    // ========================================
+    public function getFotoUrlAttribute()
+    {
+        return $this->foto ? asset('images/santri/' . $this->foto) : asset('images/default-avatar.png');
+    }
+
+    public function getUmurAttribute()
+    {
+        if ($this->tanggal_lahir) {
+            return $this->tanggal_lahir->age . ' tahun';
+        }
+        return '-';
+    }
+
+    // ========================================
+    // RELASI
+    // ========================================
     public function infaks()
     {
         return $this->hasMany(Infak::class);
     }
 
-    public function getFotoUrlAttribute()
+    // ========================================
+    // SCOPE
+    // ========================================
+    public function scopeAktif($query)
     {
-        return $this->foto ? asset('images/santri/' . $this->foto) : asset('images/default-avatar.png');
+        return $query->where('status_santri', 'aktif');
+    }
+
+    public function scopeLulus($query)
+    {
+        return $query->where('status_santri', 'lulus');
+    }
+
+    public function scopeAngkatan($query, $tahun)
+    {
+        return $query->where('tahun_masuk', $tahun);
+    }
+
+    public function scopeKelas($query, $kelas)
+    {
+        return $query->where('kelas_sekarang', $kelas);
     }
 }

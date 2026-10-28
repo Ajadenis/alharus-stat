@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Santri;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Helpers\SantriHelper;
 
 class AdminSantriController extends Controller
 {
@@ -46,37 +47,78 @@ class AdminSantriController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nisa' => 'required|string|unique:santris|max:50',
-            'nama' => 'required|string|max:255',
-            'nis' => 'nullable|string|unique:santris|max:50',
-            'kelas' => 'required|in:MDA 1,MDA 2,MDA 3,MDA 4',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'alamat' => 'nullable|string',
-            'tanggal_lahir' => 'nullable|date',
-            'nama_orang_tua' => 'nullable|string|max:255',
-            'nama_wali' => 'nullable|string|max:255',
-            'telepon_wali' => 'nullable|string|max:20',
-            'status' => 'required|in:aktif,lulus,keluar',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
+{
+    // ========================================
+    // 1. VALIDASI
+    // ========================================
+    $validated = $request->validate([
+        'nama' => 'required|string|max:255',
+        'nis' => 'required|string|unique:santris,nis',
+        'nisa' => 'required|string|unique:santris,nisa',
+        'tahun_masuk' => 'required|integer|min:2000|max:' . date('Y'),
+        'kelas_sekarang' => 'nullable|in:MDA 1,MDA 2,MDA 3,MDA 4',
+        'status_santri' => 'required|in:aktif,lulus,keluar',
+        'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+        'alamat' => 'nullable|string',
+        'tanggal_lahir' => 'nullable|date',
+        'nama_orang_tua' => 'nullable|string|max:255',
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+    ]);
 
-        $data = $request->all();
-        $data['is_active'] = $request->status == 'aktif';
-
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images/santri'), $filename);
-            $data['foto'] = $filename;
-        }
-
-        Santri::create($data);
-
-        return redirect()->route('admin.santri.index')
-                         ->with('success', 'Santri berhasil ditambahkan!');
+    // ========================================
+    // 2. DATA DASAR
+    // ========================================
+    $data = $request->all();
+    
+    // ========================================
+    // 3. OTOMATIS HITUNG KELAS
+    // ========================================
+    // Jika kelas_sekarang KOSONG, hitung otomatis
+    if (empty($data['kelas_sekarang'])) {
+        $data['kelas_sekarang'] = SantriHelper::hitungKelas($request->tahun_masuk);
     }
+    
+    // ========================================
+    // 4. STATUS AKTIF
+    // ========================================
+    $data['is_active'] = $request->has('is_active') ? true : false;
+    
+    // ========================================
+    // 5. AUTO-SET STATUS_SANTRI
+    // ========================================
+    // Jika kelas otomatis jadi "Lulus", set status jadi lulus
+    if ($data['kelas_sekarang'] === 'Lulus' && $request->status_santri === 'aktif') {
+        $data['status_santri'] = 'lulus';
+    }
+    
+    // ========================================
+    // 6. UPLOAD FOTO
+    // ========================================
+    if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+        $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
+        
+        // Buat folder jika belum ada
+        $folder = public_path('images/santri');
+        if (!file_exists($folder)) {
+            mkdir($folder, 0755, true);
+        }
+        
+        $file->move($folder, $filename);
+        $data['foto'] = $filename;
+    }
+    
+    // ========================================
+    // 7. SIMPAN
+    // ========================================
+    Santri::create($data);
+    
+    // ========================================
+    // 8. REDIRECT
+    // ========================================
+    return redirect()->route('admin.santri.index')
+                     ->with('success', 'Santri berhasil ditambahkan!');
+}
 
     public function edit(int $id)
     {
@@ -84,44 +126,83 @@ class AdminSantriController extends Controller
         return view('admin.santri.edit', compact('santri'));
     }
 
-    public function update(Request $request,int $id)
-    {
-        $santri = Santri::findOrFail($id);
-
-        $request->validate([
-            'nisa' => 'required|string|max:50|unique:santris,nisa,' . $id,
-            'nama' => 'required|string|max:255',
-            'nis' => 'nullable|string|max:50|unique:santris,nis,' . $id,
-            'kelas' => 'required|in:MDA 1,MDA 2,MDA 3,MDA 4',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'alamat' => 'nullable|string',
-            'tanggal_lahir' => 'nullable|date',
-            'nama_orang_tua' => 'nullable|string|max:255',
-            'nama_wali' => 'nullable|string|max:255',
-            'telepon_wali' => 'nullable|string|max:20',
-            'status' => 'required|in:aktif,lulus,keluar',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
-
-        $data = $request->all();
-        $data['is_active'] = $request->status == 'aktif';
-
-        if ($request->hasFile('foto')) {
-            if ($santri->foto && file_exists(public_path('images/santri/' . $santri->foto))) {
-                unlink(public_path('images/santri/' . $santri->foto));
-            }
-
-            $file = $request->file('foto');
-            $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images/santri'), $filename);
-            $data['foto'] = $filename;
-        }
-
-        $santri->update($data);
-
-        return redirect()->route('admin.santri.index')
-                         ->with('success', 'Santri berhasil diperbarui!');
+public function update(Request $request, $id)
+{
+    $santri = Santri::findOrFail($id);
+    
+    // ========================================
+    // 1. VALIDASI
+    // ========================================
+    $validated = $request->validate([
+        'nama' => 'required|string|max:255',
+        'nis' => 'required|string|unique:santris,nis,' . $id,
+        'nisa' => 'required|string|unique:santris,nisa,' . $id,
+        'tahun_masuk' => 'required|integer|min:2000|max:' . date('Y'),
+        'kelas_sekarang' => 'nullable|in:MDA 1,MDA 2,MDA 3,MDA 4',
+        'status_santri' => 'required|in:aktif,lulus,keluar',
+        'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+        'alamat' => 'nullable|string',
+        'tanggal_lahir' => 'nullable|date',
+        'nama_orang_tua' => 'nullable|string|max:255',
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+    ]);
+    
+    // ========================================
+    // 2. DATA DASAR
+    // ========================================
+    $data = $request->all();
+    
+    // ========================================
+    // 3. OTOMATIS HITUNG KELAS
+    // ========================================
+    if (empty($data['kelas_sekarang'])) {
+        $data['kelas_sekarang'] = SantriHelper::hitungKelas($request->tahun_masuk);
     }
+    
+    // ========================================
+    // 4. STATUS AKTIF
+    // ========================================
+    $data['is_active'] = $request->has('is_active') ? true : false;
+    
+    // ========================================
+    // 5. AUTO-SET STATUS_SANTRI
+    // ========================================
+    if ($data['kelas_sekarang'] === 'Lulus' && $request->status_santri === 'aktif') {
+        $data['status_santri'] = 'lulus';
+    }
+    
+    // ========================================
+    // 6. UPLOAD FOTO BARU
+    // ========================================
+    if ($request->hasFile('foto')) {
+        // Hapus foto lama
+        if ($santri->foto && file_exists(public_path('images/santri/' . $santri->foto))) {
+            unlink(public_path('images/santri/' . $santri->foto));
+        }
+        
+        $file = $request->file('foto');
+        $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
+        
+        $folder = public_path('images/santri');
+        if (!file_exists($folder)) {
+            mkdir($folder, 0755, true);
+        }
+        
+        $file->move($folder, $filename);
+        $data['foto'] = $filename;
+    }
+    
+    // ========================================
+    // 7. UPDATE
+    // ========================================
+    $santri->update($data);
+    
+    // ========================================
+    // 8. REDIRECT
+    // ========================================
+    return redirect()->route('admin.santri.index')
+                     ->with('success', 'Santri berhasil diperbarui!');
+}
 
     public function destroy(int $id)
     {
