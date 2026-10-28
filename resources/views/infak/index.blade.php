@@ -224,6 +224,7 @@
 }
 
         function renderInfakTable(infakData) {
+            window.currentInfakData = infakData;
             const tbody = document.getElementById('infakTableBody');
             let html = '';
 
@@ -274,10 +275,9 @@
             const checkboxes = document.querySelectorAll('.infak-checkbox:checked');
             const total = checkboxes.length * currentNominal;
             selectedBulans = Array.from(checkboxes).map(cb => {
-                const row = cb.closest('tr');
-                return row.querySelector('td:nth-child(2)').textContent;
+                const index = cb.dataset.index;
+                return window.currentInfakData[index]?.bulan_angka;
             });
-
             const totalSection = document.getElementById('totalSection');
             const paymentSection = document.getElementById('paymentSection');
 
