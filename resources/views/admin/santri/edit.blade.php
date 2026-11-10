@@ -84,7 +84,7 @@
             class="form-control @error('kelas_sekarang') is-invalid @enderror"
         >
             <option value="">-- Otomatis --</option>
-            @foreach(['MDA 1', 'MDA 2', 'MDA 3', 'MDA 4'] as $kelas)
+            @foreach(App\Models\Santri::KELAS as $kelas)
                 <option 
                     value="{{ $kelas }}" 
                     {{ old('kelas_sekarang', $santri->kelas_sekarang) == $kelas ? 'selected' : '' }}
@@ -127,19 +127,6 @@
         <span class="invalid-feedback">{{ $message }}</span>
     @enderror
 </div>
-
-    <div class="form-group">
-        <label for="kelas">Kelas <span class="required">*</span></label>
-        <select name="kelas" id="kelas" class="form-control @error('kelas') is-invalid @enderror" required>
-            <option value="MDA 1" {{ old('kelas', $santri->kelas) == 'MDA 1' ? 'selected' : '' }}>MDA 1</option>
-            <option value="MDA 2" {{ old('kelas', $santri->kelas) == 'MDA 2' ? 'selected' : '' }}>MDA 2</option>
-            <option value="MDA 3" {{ old('kelas', $santri->kelas) == 'MDA 3' ? 'selected' : '' }}>MDA 3</option>
-            <option value="MDA 4" {{ old('kelas', $santri->kelas) == 'MDA 4' ? 'selected' : '' }}>MDA 4</option>
-        </select>
-        @error('kelas')
-            <span class="invalid-feedback">{{ $message }}</span>
-        @enderror
-    </div>
 </div>
 
             <div class="form-row">
@@ -194,18 +181,6 @@
                     <label for="telepon_wali">Telepon Wali</label>
                     <input type="text" name="telepon_wali" id="telepon_wali" class="form-control @error('telepon_wali') is-invalid @enderror" value="{{ old('telepon_wali', $santri->telepon_wali) }}" placeholder="Nomor telepon wali">
                     @error('telepon_wali')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="status">Status <span class="required">*</span></label>
-                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
-                        <option value="aktif" {{ old('status', $santri->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="lulus" {{ old('status', $santri->status) == 'lulus' ? 'selected' : '' }}>Lulus</option>
-                        <option value="keluar" {{ old('status', $santri->status) == 'keluar' ? 'selected' : '' }}>Keluar</option>
-                    </select>
-                    @error('status')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>

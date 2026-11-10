@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label for="icon">Icon</label>
                     <input type="text" name="icon" id="icon" class="form-control @error('icon') is-invalid @enderror" value="{{ old('icon') }}" placeholder="Contoh: bi-book, bi-mic, bi-star">
-                    <small class="form-text">Gunakan icon Bootstrap: <a href="https://icons.getbootstrap.com/" target="_blank">icons.getbootstrap.com</a></small>
+                    <small class="form-text">Gunakan icon Bootstrap: <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener">icons.getbootstrap.com</a></small>
                     @error('icon')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -58,7 +58,7 @@
             <div class="form-group">
                 <label for="foto">Foto</label>
                 <input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror" accept="image/*">
-                <class="form-text">Format: JPG, PNG, JPEG, WEBP. Maks: 2MB</small>
+                <small class="form-text">Format: JPG, PNG, JPEG, WEBP. Maks: 2MB</small>
                 @error('foto')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror

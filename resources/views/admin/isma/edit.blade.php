@@ -66,7 +66,7 @@
                         <img src="{{ $isma->foto_url }}" alt="Foto saat ini">
                         <div>
                             <p class="image-name"><strong>Foto saat ini:</strong> {{ $isma->foto }}</p>
-                            <class="form-text">Upload foto baru untuk mengganti</small>
+                            <small class="form-text">Upload foto baru untuk mengganti</small>
                         </div>
                     </div>
                 @endif

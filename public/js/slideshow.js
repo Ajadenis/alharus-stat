@@ -1,135 +1,77 @@
-// ========================================
-// SLIDESHOW dengan Navigasi Manual & Autoplay
-// ========================================
+// Slideshow beranda: navigasi manual (panah/dot) + autoplay 4 detik.
+// Autoplay berhenti saat kursor di atas slideshow.
 
-let slideIndex = 1; // Mulai dari slide 1
-let slideInterval;
+let slideIndex = 1;
+let slideInterval = null;
+let sedangHover = false;
 
-// Jalankan slideshow saat halaman dimuat
 document.addEventListener("DOMContentLoaded", function () {
+    // Halaman tanpa slide: tidak perlu timer sama sekali
+    if (document.getElementsByClassName("mySlides").length === 0) return;
+
     showSlides(slideIndex);
     startAutoSlide();
 
-    // Pause autoplay saat hover
     const container = document.querySelector(".slideshow-container");
     if (container) {
         container.addEventListener("mouseenter", function () {
-            clearInterval(slideInterval);
+            sedangHover = true;
+            stopAutoSlide();
         });
         container.addEventListener("mouseleave", function () {
+            sedangHover = false;
             startAutoSlide();
         });
     }
 });
 
-// Fungsi untuk menampilkan slide berdasarkan index
 function showSlides(n) {
-    let slides = document.getElementsByClassName("mySlides");
-    let dots = document.getElementsByClassName("dot");
+    const slides = document.getElementsByClassName("mySlides");
+    const dots = document.getElementsByClassName("dot");
 
-    // Jika tidak ada slide, berhenti
     if (slides.length === 0) return;
 
-    // Reset jika index melebihi batas
-    if (n > slides.length) {
-        slideIndex = 1;
+    if (n > slides.length) slideIndex = 1;
+    if (n < 1) slideIndex = slides.length;
+
+    for (const slide of slides) {
+        slide.style.display = "none";
+        slide.style.opacity = "0";
     }
-    if (n < 1) {
-        slideIndex = slides.length;
+    for (const dot of dots) {
+        dot.classList.remove("active");
     }
 
-    // Sembunyikan semua slide
-    for (let i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-        slides[i].style.opacity = "0";
-    }
-
-    // Nonaktifkan semua dot
-    for (let i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-
-    // Tampilkan slide yang aktif dengan animasi fade
-    slides[slideIndex - 1].style.display = "block";
+    const aktif = slides[slideIndex - 1];
+    aktif.style.display = "block";
     setTimeout(() => {
-        slides[slideIndex - 1].style.opacity = "1";
+        aktif.style.opacity = "1"; // efek fade
     }, 50);
 
-    // Aktifkan dot yang sesuai
-    if (dots.length > 0 && dots[slideIndex - 1]) {
-        dots[slideIndex - 1].className += " active";
+    if (dots[slideIndex - 1]) {
+        dots[slideIndex - 1].classList.add("active");
     }
 }
 
-// Fungsi untuk navigasi Next/Previous
+// Panah prev/next
 function plusSlides(n) {
-    clearInterval(slideInterval); // Hentikan autoplay sementara
+    stopAutoSlide();
     showSlides((slideIndex += n));
-    startAutoSlide(); // Mulai ulang autoplay
+    if (!sedangHover) startAutoSlide();
 }
 
-// Fungsi untuk pindah ke slide tertentu (via dot)
+// Dot
 function currentSlide(n) {
-    clearInterval(slideInterval);
+    stopAutoSlide();
     showSlides((slideIndex = n));
-    startAutoSlide();
+    if (!sedangHover) startAutoSlide();
 }
 
-// Fungsi untuk memulai autoplay
 function startAutoSlide() {
-    clearInterval(slideInterval); // Hapus interval yang lama
-    slideInterval = setInterval(function () {
-        plusSlides(1);
-    }, 4000); // Ganti setiap 4 detik
+    stopAutoSlide();
+    slideInterval = setInterval(() => plusSlides(1), 4000);
 }
 
-// ========================================
-// VERSI SEDERHANA (Jika Anda lebih suka)
-// ========================================
-
-/*
-// Versi sederhana tanpa fitur hover pause
-let slideIndex = 0;
-
-function showSlides() {
-    let i;
-    let slides = document.getElementsByClassName("mySlides");
-    let dots = document.getElementsByClassName("dot");
-    
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-    }
-    
-    slideIndex++;
-    if (slideIndex > slides.length) {
-        slideIndex = 1;
-    }
-    
-    // Update dots
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-    
-    slides[slideIndex - 1].style.display = "block";
-    if (dots.length > 0) {
-        dots[slideIndex - 1].className += " active";
-    }
-    
-    setTimeout(showSlides, 4000);
+function stopAutoSlide() {
+    clearInterval(slideInterval);
 }
-
-// Jalankan slideshow
-document.addEventListener('DOMContentLoaded', showSlides);
-
-// Fungsi untuk navigasi manual
-function plusSlides(n) {
-    slideIndex += n - 1;
-    if (slideIndex < 0) slideIndex = 0;
-    showSlides();
-}
-
-function currentSlide(n) {
-    slideIndex = n - 1;
-    showSlides();
-}
-*/

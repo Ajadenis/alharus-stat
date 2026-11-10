@@ -1,0 +1,954 @@
+:root {
+    --primary-color: #1a6e18;
+    --secondary-color: #fff;
+    --background-color: #010101;
+    --hover-color: #00ff00;
+}
+/* ========================================
+   ADMIN GURU CSS
+   ======================================== */
+
+.admin-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.admin-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-header-section .header-left h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-header-section .header-left h2 i {
+    color: var(--primary-color);
+}
+
+.admin-header-section .header-left .subtitle {
+    color: #888;
+    margin: 0.2rem 0 0 2.2rem;
+    font-size: 0.9rem;
+}
+
+.admin-header-section .header-right {
+    display: flex !important;
+}
+
+.filter-section {
+    background: #fff;
+    padding: 1.2rem;
+    border-radius: 0.8rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.filter-group {
+    position: relative;
+    flex: 1;
+    min-width: 160px;
+}
+
+.filter-group.search-group {
+    flex: 2;
+    min-width: 200px;
+}
+
+.filter-group.search-group i {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.filter-group input,
+.filter-group select {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    padding-left: 2.2rem;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.filter-group select {
+    padding-left: 0.8rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: var(--hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+}
+
+.btn-filter {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.btn-filter:hover {
+    background: var(--hover-color);
+}
+
+.btn-reset {
+    background: #6c757d;
+    color: #fff;
+}
+
+.btn-reset:hover {
+    background: #5a6268;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 0.4rem;
+    margin-bottom: 1.2rem;
+    animation: slideDown 0.3s ease;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.table-container {
+    background: #fff;
+    border-radius: 0.8rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.admin-table thead {
+    background: #f8f9fa;
+}
+
+.admin-table th {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.table-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.table-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge-jabatan {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    background: #e8f0fe;
+    color: var(--primary-color);
+    border-radius: 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0.1rem 0.2rem;
+}
+
+.badge-mapel {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    background: #e8f0fe;
+    color: var(--primary-color);
+    border-radius: 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 2rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.status-badge .status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-badge.active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.active .status-dot {
+    background: #28a745;
+}
+
+.status-badge.inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-badge.inactive .status-dot {
+    background: #dc3545;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.btn-action:hover {
+    transform: scale(1.1);
+}
+
+.btn-edit {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.btn-edit:hover {
+    background: #ffc107;
+    color: #333;
+}
+
+.btn-toggle {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.btn-toggle:hover {
+    background: #17a2b8;
+    color: #fff;
+}
+
+.btn-delete {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.btn-delete:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
+.delete-form {
+    display: inline;
+}
+
+.empty-row td {
+    padding: 2rem 1rem !important;
+}
+
+.empty-state-admin {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.empty-state-admin i {
+    font-size: 3rem;
+    color: #ddd;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-admin h4 {
+    font-size: 1rem;
+    color: #555;
+    margin: 0 0 0.3rem 0;
+}
+
+.empty-state-admin p {
+    color: #999;
+    font-size: 0.9rem;
+    margin: 0 0 1rem 0;
+}
+
+.pagination-wrapper {
+    padding: 0.8rem 1rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-wrapper .pagination {
+    display: flex;
+    gap: 0.2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.pagination-wrapper .pagination li a,
+.pagination-wrapper .pagination li span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 0.3rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.pagination-wrapper .pagination li a:hover {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+.pagination-wrapper .pagination li.active span {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+/* ========================================
+   RESPONSIVE MEDIA QUERIES
+   ======================================== */
+
+/* ========================================
+   PC / DESKTOP (≥ 1200px)
+   ======================================== */
+@media (min-width: 1200px) {
+    .admin-wrapper {
+        padding: 0 2rem;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 1.8rem;
+    }
+
+    .admin-table {
+        font-size: 1rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 1rem 1.5rem;
+    }
+
+    .table-image {
+        width: 70px;
+        height: 70px;
+    }
+
+    .btn {
+        padding: 0.8rem 1.8rem;
+        font-size: 1rem;
+    }
+
+    .filter-group {
+        min-width: 200px;
+    }
+
+    .filter-section {
+        padding: 1.5rem 2rem;
+    }
+}
+
+/* ========================================
+   LAPTOP (992px - 1199px)
+   ======================================== */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .admin-wrapper {
+        padding: 0 1.5rem;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 1.6rem;
+    }
+
+    .admin-table {
+        font-size: 0.95rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.8rem 1.2rem;
+    }
+
+    .table-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .btn {
+        padding: 0.6rem 1.4rem;
+        font-size: 0.95rem;
+    }
+
+    .filter-group {
+        min-width: 170px;
+    }
+}
+
+/* ========================================
+   TABLET (768px - 991px)
+   ======================================== */
+@media (min-width: 768px) and (max-width: 991px) {
+    .admin-wrapper {
+        padding: 0 1rem;
+    }
+
+    /* ======================================== */
+    /* HEADER - SEJAJAR KIRI & KANAN           */
+    /* ======================================== */
+    .admin-header-section {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 0.8rem !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .admin-header-section .header-left {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 1.3rem;
+        white-space: nowrap;
+    }
+
+    .admin-header-section .header-left .subtitle {
+        margin-left: 0;
+        font-size: 0.8rem;
+        display: none;
+    }
+
+    .admin-header-section .header-right {
+        flex-shrink: 0;
+    }
+
+    .admin-header-section .header-right .btn {
+        white-space: nowrap;
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .admin-header-section .header-right .btn i {
+        font-size: 0.9rem;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .filter-group {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .filter-group.search-group {
+        min-width: unset;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .admin-table {
+        font-size: 0.85rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.6rem 0.8rem;
+    }
+
+    .table-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    .badge-jabatan {
+        font-size: 0.75rem;
+        padding: 0.1rem 0.5rem;
+    }
+
+    .badge-mapel {
+        font-size: 0.75rem;
+        padding: 0.15rem 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    /* Hanya tombol DI DALAM filter-form yang full-width, bukan tombol header */
+    .filter-form .btn-primary,
+    .filter-form .btn-filter,
+    .filter-form .btn-reset {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .action-buttons {
+        gap: 0.2rem;
+    }
+
+    .btn-action {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
+    .pagination-wrapper .pagination li a,
+    .pagination-wrapper .pagination li span {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+        padding: 0 0.5rem;
+    }
+
+    .alert {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .empty-state-admin i {
+        font-size: 2.5rem;
+    }
+
+    .empty-state-admin h4 {
+        font-size: 0.9rem;
+    }
+
+    .empty-state-admin p {
+        font-size: 0.8rem;
+    }
+
+    .table-container {
+        border-radius: 0.6rem;
+    }
+
+    .filter-section {
+        padding: 1rem;
+        border-radius: 0.6rem;
+    }
+}
+
+/* ========================================
+   HP / MOBILE (≤ 767px)
+   ======================================== */
+@media (max-width: 767px) {
+    .admin-wrapper {
+        padding: 0 0.8rem;
+    }
+
+    /* ======================================== */
+    /* HEADER - SEJAJAR KIRI & KANAN           */
+    /* ======================================== */
+    .admin-header-section {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .admin-header-section .header-left {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 1.1rem;
+        white-space: nowrap;
+    }
+
+    .admin-header-section .header-left h2 i {
+        font-size: 1rem;
+    }
+
+    .admin-header-section .header-left .subtitle {
+        display: none;
+    }
+
+    .admin-header-section .header-right {
+        flex-shrink: 0;
+    }
+
+    .admin-header-section .header-right .btn {
+        white-space: nowrap;
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .admin-header-section .header-right .btn i {
+        font-size: 0.8rem;
+        margin-right: 0.2rem;
+    }
+
+    .filter-section {
+        padding: 0.8rem;
+        border-radius: 0.5rem;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filter-group {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .filter-group.search-group {
+        min-width: unset;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 0.4rem 0.6rem;
+        padding-left: 1.8rem;
+        font-size: 0.8rem;
+        border-radius: 0.3rem;
+    }
+
+    .filter-group.search-group i {
+        left: 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .admin-table {
+        font-size: 0.75rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.4rem 0.5rem;
+    }
+
+    .admin-table th {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .table-image {
+        width: 35px;
+        height: 35px;
+    }
+
+    .badge-jabatan {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.4rem;
+    }
+
+    .badge-mapel {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.4rem;
+    }
+
+    .status-badge {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.5rem;
+    }
+
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    /* Hanya tombol DI DALAM filter-form yang full-width, bukan tombol header */
+    .filter-form .btn-primary,
+    .filter-form .btn-filter,
+    .filter-form .btn-reset {
+        width: 100%;
+        justify-content: center;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .action-buttons {
+        gap: 0.2rem;
+    }
+
+    .btn-action {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+    }
+
+    .pagination-wrapper {
+        padding: 0.5rem 0.8rem;
+    }
+
+    .pagination-wrapper .pagination li a,
+    .pagination-wrapper .pagination li span {
+        min-width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+        padding: 0 0.4rem;
+    }
+
+    .alert {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+        border-radius: 0.3rem;
+    }
+
+    .empty-state-admin i {
+        font-size: 2rem;
+    }
+
+    .empty-state-admin h4 {
+        font-size: 0.8rem;
+    }
+
+    .empty-state-admin p {
+        font-size: 0.75rem;
+    }
+
+    .table-container {
+        border-radius: 0.5rem;
+    }
+
+    .empty-row td {
+        padding: 1rem 0.5rem !important;
+    }
+}
+
+/* ========================================
+   HP KECIL (≤ 480px)
+   ======================================== */
+@media (max-width: 480px) {
+    .admin-wrapper {
+        padding: 0 0.5rem;
+    }
+
+    /* ======================================== */
+    /* HEADER - SEJAJAR KIRI & KANAN           */
+    /* ======================================== */
+    .admin-header-section {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 0.3rem !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .admin-header-section .header-left h2 {
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    .admin-header-section .header-left h2 i {
+        font-size: 0.85rem;
+    }
+
+    .admin-header-section .header-left .subtitle {
+        display: none;
+    }
+
+    .admin-header-section .header-right {
+        flex-shrink: 0;
+    }
+
+    .admin-header-section .header-right .btn {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.6rem;
+        white-space: nowrap;
+    }
+
+    .admin-header-section .header-right .btn i {
+        font-size: 0.7rem;
+        margin-right: 0;
+    }
+
+    .filter-section {
+        padding: 0.5rem;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 0.3rem 0.5rem;
+        padding-left: 1.5rem;
+        font-size: 0.7rem;
+    }
+
+    .admin-table {
+        font-size: 0.65rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.3rem 0.4rem;
+    }
+
+    .admin-table th {
+        font-size: 0.55rem;
+    }
+
+    .table-image {
+        width: 28px;
+        height: 28px;
+    }
+
+    .badge-jabatan {
+        font-size: 0.5rem;
+        padding: 0.05rem 0.3rem;
+    }
+
+    .badge-mapel {
+        font-size: 0.5rem;
+        padding: 0.05rem 0.3rem;
+    }
+
+    .status-badge {
+        font-size: 0.5rem;
+        padding: 0.1rem 0.4rem;
+    }
+
+    .btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+    }
+
+    .btn-action {
+        width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+    }
+
+    .pagination-wrapper .pagination li a,
+    .pagination-wrapper .pagination li span {
+        min-width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+        padding: 0 0.3rem;
+    }
+
+    .alert {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.7rem;
+    }
+
+    .empty-state-admin i {
+        font-size: 1.5rem;
+    }
+
+    .empty-state-admin h4 {
+        font-size: 0.7rem;
+    }
+
+    .empty-state-admin p {
+        font-size: 0.65rem;
+    }
+}

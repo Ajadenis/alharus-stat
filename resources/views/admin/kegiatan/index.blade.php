@@ -3,8 +3,8 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 @endpush
-@section('title', 'Admin - Daftar Kegiatan')
-
+@section('title', 'Kelola Kegiatan - Admin Panel')
+@section('page-title', 'Kelola Kegiatan')
 @section('content')
 <div class="admin-container">
     <div class="page-header">
@@ -87,10 +87,14 @@
                                 <a href="{{ route('admin.kegiatan.edit', $item->id) }}" class="btn-edit" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a href="{{ route('admin.kegiatan.toggle-status', $item->id) }}" class="btn-toggle" title="Toggle Status">
-                                    <i class="bi {{ $item->is_active ? 'bi-eye-slash' : 'bi-eye' }}"></i>
-                                </a>
-                                <form action="{{ route('admin.kegiatan.destroy', $item->id) }}" method="POST" class="delete-form" onsubmit="return confirm('Yakin ingin menghapus kegiatan ini?')">
+                                <form action="{{ route('admin.kegiatan.toggle-status', $item->id) }}" method="POST" class="toggle-form">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn-action btn-toggle" title="{{ $item->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
+                                            <i class="bi {{ $item->is_active ? 'bi-eye-slash' : 'bi-eye' }}"></i>
+                                        </button>
+                                    </form>
+                                <form action="{{ route('admin.kegiatan.destroy', $item->id) }}" method="POST" class="delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn-delete" title="Hapus">

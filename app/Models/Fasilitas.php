@@ -4,47 +4,38 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use App\Models\Concerns\HasUniqueSlug;
+use App\Models\Concerns\HasFotoUrl;
+use App\Models\Concerns\Activatable;
 
 class Fasilitas extends Model
 {
-    use HasFactory;
+  use HasFactory, HasFotoUrl, HasUniqueSlug, Activatable;
 
-    protected $table = 'fasilitas';
+  protected string $fotoFolder = "fasilitas";
+  protected string $fotoDefault = "default-fasilitas.png";
 
-    protected $fillable = [
-        'nama',
-        'slug',
-        'deskripsi',
-        'foto',
-        'icon',
-        'kategori',
-        'jumlah',
-        'is_active',
-    ];
+  protected $table = "fasilitas";
 
-    protected $casts = [
-        'is_active' => 'boolean',
-        'jumlah' => 'integer',
-    ];
+  protected $fillable = ["nama", "slug", "deskripsi", "foto", "icon", "kategori", "jumlah", "is_active"];
 
-    protected static function boot()
-    {
-        parent::boot();
+  protected $casts = [
+    "is_active" => "boolean",
+    "jumlah" => "integer",
+  ];
 
-        static::creating(function ($fasilitas) {
-            $fasilitas->slug = Str::slug($fasilitas->nama);
-        });
+  protected static function boot()
+  {
+    parent::boot();
 
-        static::updating(function ($fasilitas) {
-            if ($fasilitas->isDirty('nama')) {
-                $fasilitas->slug = Str::slug($fasilitas->nama);
-            }
-        });
-    }
+    static::creating(function ($fasilitas) {
+      $fasilitas->slug = static::buatSlugUnik($fasilitas->nama);
+    });
 
-    public function getFotoUrlAttribute()
-    {
-        return $this->foto ? asset('images/fasilitas/' . $this->foto) : asset('images/default-fasilitas.jpg');
-    }
+    static::updating(function ($fasilitas) {
+      if ($fasilitas->isDirty("nama")) {
+        $fasilitas->slug = static::buatSlugUnik($fasilitas->nama, $fasilitas->id);
+      }
+    });
+  }
 }

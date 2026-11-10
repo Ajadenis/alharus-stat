@@ -41,7 +41,7 @@
                     <img 
                         src="{{ asset('images/' . $item->gambar) }}" 
                         alt="{{ $item->judul }}"
-                        onerror="this.src='{{ asset('images/default-kegiatan.jpg') }}'"
+                        onerror="this.onerror=null;this.src='{{ asset('images/default-kegiatan.jpg') }}'"
                     >
                 </div>
 
@@ -69,7 +69,7 @@
                                             <img 
                                                 src="{{ asset('images/' . $itemTerbaru->gambar) }}" 
                                                 alt="{{ $itemTerbaru->judul }}"
-                                                onerror="this.src='{{ asset('images/default-kegiatan.jpg') }}'"
+                                                onerror="this.onerror=null;this.src='{{ asset('images/default-kegiatan.jpg') }}'"
                                             >
                                         </div>
                                         <div class="terbaru-info">

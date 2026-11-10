@@ -8,27 +8,22 @@ use App\Models\User;
 
 class UserSeeder extends Seeder
 {
-    public function run(): void
-    {
-        // Hanya buat user admin
-        User::create([
-            'name' => 'Admin MDT',
-            'email' => 'madrasahalharus@gmail.com',
-            'password' => Hash::make('Adminalharus171101'),
-            'role' => 'admin',
-        ]);
-        user::create([
-            'name' => 'Denis Firmansyah Ramadhan',
-            'email' => 'denisfirmansyah3000@gmail.com',
-            'password' => hash::make('Denis011117'),
-            'role' => 'admin',
-        ]);
-        // HAPUS user biasa
-        // User::create([
-        //     'name' => 'User MDT',
-        //     'email' => 'user@mdtalharus.com',
-        //     'password' => Hash::make('password123'),
-        //     'role' => 'user',
-        // ]);
+  public function run(): void
+  {
+    foreach (config("admin.accounts") as $akun) {
+      if (empty($akun["email"]) || empty($akun["password"])) {
+        $this->command->warn("Akun admin dilewati: email atau password belum diisi di .env");
+        continue;
+      }
+
+      User::updateOrCreate(
+        ["email" => $akun["email"]],
+        [
+          "name" => $akun["name"],
+          "password" => Hash::make($akun["password"]),
+          "role" => "admin",
+        ]
+      );
     }
+  }
 }

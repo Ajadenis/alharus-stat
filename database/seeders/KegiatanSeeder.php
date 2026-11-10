@@ -32,7 +32,7 @@ class KegiatanSeeder extends Seeder
             ],
             [
                 'judul' => 'Kaulinan Barudak - Rerebonan',
-                'gambar' => 'kaulinan-barudak/Rerebonan/rebon-7.jpg',
+                'gambar' => null,
                 'ringkasan' => 'Rerebonan adalah salah satu permainan tradisional Sunda yang mengajarkan kerjasama dan kebersamaan.',
                 'deskripsi' => 'Rerebonan adalah permainan tradisional dari tanah Sunda yang dimainkan oleh anak-anak. Permainan ini mengajarkan nilai-nilai kerjasama, kebersamaan, dan sportivitas. Dalam permainan ini, anak-anak belajar untuk bekerja sama dalam tim dan menghargai lawan main.',
                 'kategori' => 'Permainan Tradisional',
@@ -42,7 +42,7 @@ class KegiatanSeeder extends Seeder
             ],
             [
                 'judul' => 'Kaulinan Barudak - Sapintrong',
-                'gambar' => 'kaulinan-barudak/Sapintrong/sapintrong-4.jpg',
+                'gambar' => null,
                 'ringkasan' => 'Sapintrong adalah permainan tradisional Sunda yang melatih ketangkasan dan kecepatan.',
                 'deskripsi' => 'Sapintrong adalah salah satu permainan tradisional Sunda yang sangat populer di kalangan anak-anak. Permainan ini melatih ketangkasan, kecepatan, dan strategi. Anak-anak belajar untuk berpikir cepat dan mengambil keputusan dalam waktu singkat.',
                 'kategori' => 'Permainan Tradisional',
@@ -52,7 +52,7 @@ class KegiatanSeeder extends Seeder
             ],
             [
                 'judul' => 'Pondok Ramadhan 2024',
-                'gambar' => 'pondok-ramadhan/ramadhan-1.jpg',
+                'gambar' => null,
                 'ringkasan' => 'Kegiatan Pondok Ramadhan untuk santri MDT Al-Harus yang diisi dengan berbagai kegiatan ibadah dan pembelajaran.',
                 'deskripsi' => 'Pondok Ramadhan adalah kegiatan tahunan yang diadakan di MDT Al-Harus selama bulan Ramadhan. Kegiatan ini diisi dengan berbagai program seperti tadarus Al-Quran, kajian Islam, shalat tarawih berjamaah, dan berbagai lomba keagamaan. Tujuan dari kegiatan ini adalah untuk meningkatkan keimanan dan ketakwaan para santri.',
                 'kategori' => 'Keagamaan',
@@ -62,7 +62,7 @@ class KegiatanSeeder extends Seeder
             ],
             [
                 'judul' => 'Acara Perpisahan Santri Angkatan 2024',
-                'gambar' => 'perpisahan/perpisahan-1.jpg',
+                'gambar' => null,
                 'ringkasan' => 'Acara perpisahan untuk santri angkatan 2024 yang telah menyelesaikan pendidikan di MDT Al-Harus.',
                 'deskripsi' => 'Acara perpisahan ini merupakan momen haru bagi para santri angkatan 2024 yang telah menyelesaikan masa pendidikan mereka di MDT Al-Harus. Acara diisi dengan berbagai pertunjukan seni, pidato perpisahan, dan pemberian penghargaan kepada santri berprestasi.',
                 'kategori' => 'Acara',

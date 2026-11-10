@@ -2,10 +2,6 @@
    ROOT VARIABLES
    ======================================== */
 :root {
-    --primary-color: #1a6e18;
-    --secondary-color: #fff;
-    --background-color: #010101;
-    --hover-color: #00ff00;
     --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
     --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
     --radius: 1.5rem;
@@ -244,6 +240,30 @@
 /* ========================================
    LOADING - ANIMATED
    ======================================== */
+/* Spinner (Bootstrap tidak dimuat, jadi didefinisikan sendiri) */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner-border {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 0.15rem solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    vertical-align: -0.125em;
+}
+
+.spinner-border-sm {
+    width: 1em;
+    height: 1em;
+    border-width: 0.15em;
+}
+
 .loading-spinner {
     text-align: center;
     padding: 3rem 0;

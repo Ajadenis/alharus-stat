@@ -4,35 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\HasFotoUrl;
+use App\Models\Concerns\HasJabatanList;
+use App\Models\Concerns\Activatable;
 
 class Guru extends Model
 {
-    use HasFactory;
+  use HasFactory, HasFotoUrl, HasJabatanList, Activatable;
 
-    protected $fillable = [
-        'nama',
-        'foto',
-        'jabatan',
-        'mata_pelajaran',
-        'is_active',
-    ];
+  protected string $fotoFolder = "guru";
+  protected string $fotoDefault = "default-avatar.png";
 
-    protected $casts = [
-        'is_active' => 'boolean',
-        'jabatan' => 'array',
-    ];
+  protected $fillable = ["nama", "foto", "jabatan", "mata_pelajaran", "is_active"];
 
-    // Accessor untuk URL foto
-    public function getFotoUrlAttribute()
-    {
-        return $this->foto ? asset('images/guru/' . $this->foto) : asset('images/default-avatar.png');
-    }
-    // Tampilkan jabatan (untuk public)
-    public function getJabatanListAttribute()
-    {
-        if (is_array($this->jabatan)) {
-            return implode(' & ', $this->jabatan);
-        }
-        return $this->jabatan ?? '-';
-    }
+  protected $casts = [
+    "is_active" => "boolean",
+    "jabatan" => "array",
+  ];
 }

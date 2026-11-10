@@ -19,9 +19,6 @@
         </div>
         <div class="header-right">
             <!-- ALL ACCEPT BUTTON -->
-            @php
-                $pendingCount = $infaks->where('status', 'pending')->count();
-            @endphp
             @if($pendingCount > 0)
                 <form action="{{ route('admin.infak.all-accept') }}" method="POST" id="allAcceptForm" style="display:inline;">
                     @csrf
@@ -103,13 +100,13 @@
                 <tbody>
                     @forelse($infaks as $key => $item)
                         <tr>
-                            <td>{{ $key + $infaks->firstItem() }}</td>
-                            <td><strong>{{ $item->nisa }}</strong></td>
-                            <td>{{ $item->santri->nama ?? '-' }}</td>
-                            <td>{{ $item->bulan }}</td>
-                            <td>{{ $item->tahun }}</td>
-                            <td>{{ $item->jumlah_rupiah }}</td>
-                            <td>
+                            <td data-label="No">{{ $key + $infaks->firstItem() }}</td>
+                            <td data-label="NISA"><strong>{{ $item->nisa }}</strong></td>
+                            <td data-label="Nama Santri">{{ $item->santri->nama ?? '-' }}</td>
+                            <td data-label="Bulan">{{ $item->nama_bulan }}</td>
+                            <td data-label="Tahun">{{ $item->tahun }}</td>
+                            <td data-label="Jumlah">{{ $item->jumlah_rupiah }}</td>
+                            <td data-label="status">
                                 @php
                                     $statusMap = [
                                         'lunas' => ['class' => 'success', 'label' => '✅ Lunas'],
@@ -123,7 +120,7 @@
                                     {{ $status['label'] }}
                                 </span>
                             </td>
-                            <td>
+                            <td data-label="metode">
                                 @if($item->metode_pembayaran)
                                     @php
                                         $metodeMap = [
@@ -137,16 +134,16 @@
                                     <span class="text-muted">-</span>
                                 @endif
                             </td>
-                            <td>
+                            <td data-label="bukti">
                                 @if($item->bukti_pembayaran)
-                                    <a href="{{ asset('images/' . $item->bukti_pembayaran) }}" target="_blank" class="btn-action btn-view" title="Lihat Bukti">
+                                    <a href="{{ route('admin.infak.bukti', $item->id) }}" target="_blank" rel="noopener" class="btn-action btn-view" title="Lihat Bukti">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 @else
                                     <span class="text-muted">-</span>
                                 @endif
                             </td>
-                            <td>
+                            <td data-label="aksi">
                                 <div class="action-buttons">
                                     @if($item->status == 'pending')
                                         {{-- KONFIRMASI --}}
@@ -196,7 +193,7 @@
 
         @if($infaks->hasPages())
             <div class="pagination-wrapper">
-                {{ $infaks->appends(request()->query())->links() }}
+                {{ $infaks->links() }}
             </div>
         @endif
     </div>

@@ -12,7 +12,7 @@ class GuruSeeder extends Seeder
         $gurus = [
             [
                 'nama' => 'Asep Sopandi, S.Kom.i',
-                'foto' => 'guru-1.jpg',
+                'foto' => null,
                 'jabatan' => ['Kepala Madrasah','Wali Kelas'],
                 'mata_pelajaran' => 'SKI',
                 'is_active' => true,

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -68,18 +68,18 @@
                         <span>Fasilitas</span>
                     </a>
                 </li>
-                <li>
+                                <li>
                     <a href="{{ route('admin.infak.index') }}" class="{{ request()->routeIs('admin.infak.*') ? 'active' : '' }}">
-                <i class="bi bi-cash-stack"></i>
-                <span>Infak</span>
-            </a>
+                        <i class="bi bi-cash-stack"></i>
+                        <span>Infak</span>
+                    </a>
                 </li>
                 <li>
-            <a href="{{ route('admin.santri.index') }}" class="{{ request()->routeIs('admin.santri.*') ? 'active' : '' }}">
-                <i class="bi bi-mortarboard"></i>
-                <span>Santri</span>
-            </a>
-        </li>
+                    <a href="{{ route('admin.santri.index') }}" class="{{ request()->routeIs('admin.santri.*') ? 'active' : '' }}">
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span>Santri</span>
+                    </a>
+                </li>
             </ul>
         </nav>
 
@@ -93,16 +93,15 @@
                 </div>
             </div>
             
-            <a href="{{ route('home') }}" target="_blank">
+            <a href="{{ route('home') }}" target="_blank" rel="noopener">
                 <i class="bi bi-box-arrow-up-right"></i>
                 <span>Lihat Website</span>
             </a>
             
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('logout') }}" method="POST" class="header-logout-form">
                 @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Logout</span>
+                <button type="submit" class="header-logout" title="Logout" aria-label="Logout">
+                  <i class="bi bi-box-arrow-right"></i>
                 </button>
             </form>
         </div>

@@ -53,7 +53,7 @@
 
             <div class="form-group">
                 <label for="mata_pelajaran">Mata Pelajaran</label>
-                <input type="text" name="mata_pelajaran" id="mata_pelajaran" class="form-control @error('mata_pelajaran') is-invalid @enderror" value="{{ old('mata_pelajaran', $guru->mata_pelajaran) }}" required placeholder="Contoh: Matematika, Bahasa Arab, dll">
+                <input type="text" name="mata_pelajaran" id="mata_pelajaran" class="form-control @error('mata_pelajaran') is-invalid @enderror" value="{{ old('mata_pelajaran', $guru->mata_pelajaran) }}" placeholder="Contoh: Qurdist, Bahasa Arab, dll">
                 @error('mata_pelajaran')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
@@ -66,7 +66,7 @@
                         <img src="{{ $guru->foto_url }}" alt="Foto saat ini">
                         <div>
                             <p class="image-name"><strong>Foto saat ini:</strong> {{ $guru->foto }}</p>
-                            <class="form-text">Upload foto baru untuk mengganti</>
+                            <small class="form-text">Upload foto baru untuk mengganti</small>
                         </div>
                     </div>
                 @endif

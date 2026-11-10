@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -25,75 +26,98 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Infak extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $fillable = [
-        'santri_id',
-        'nisa',
-        'bulan',
-        'tahun',
-        'jumlah',
-        'tanggal_bayar',
-        'status',
-        'metode_pembayaran',
-        'keterangan',
-        'bukti_pembayaran',
-        'user_id',
+  protected $fillable = [
+    "santri_id",
+    "nisa",
+    "bulan",
+    "tahun",
+    "jumlah",
+    "tanggal_bayar",
+    "status",
+    "metode_pembayaran",
+    "keterangan",
+    "bukti_pembayaran",
+    "user_id",
+  ];
+
+  protected $casts = [
+    "tanggal_bayar" => "date",
+    "jumlah" => "decimal:2",
+    "bulan" => "integer", // ✅ WAJIB: bulan = angka
+    "tahun" => "integer", // ✅ WAJIB: tahun = angka
+  ];
+
+  // ========================================
+  // RELASI
+  // ========================================
+  public function santri()
+  {
+    return $this->belongsTo(Santri::class);
+  }
+
+  public function user()
+  {
+    return $this->belongsTo(User::class);
+  }
+
+  // ========================================
+  // ACCESSOR
+  // ========================================
+  public function getJumlahRupiahAttribute()
+  {
+    return "Rp " . number_format($this->jumlah, 0, ",", ".");
+  }
+
+  public function getNamaBulanAttribute()
+  {
+    $bulan = [
+      1 => "Januari",
+      2 => "Februari",
+      3 => "Maret",
+      4 => "April",
+      5 => "Mei",
+      6 => "Juni",
+      7 => "Juli",
+      8 => "Agustus",
+      9 => "September",
+      10 => "Oktober",
+      11 => "November",
+      12 => "Desember",
     ];
+    return $bulan[$this->bulan] ?? "-";
+  }
 
-    protected $casts = [
-        'tanggal_bayar' => 'date',
-        'jumlah' => 'decimal:2',
-        'bulan' => 'integer',   // ✅ WAJIB: bulan = angka
-        'tahun' => 'integer',   // ✅ WAJIB: tahun = angka
-    ];
+  // ========================================
+  // SCOPE
+  // ========================================
+  public function scopeLunas($query)
+  {
+    return $query->where("status", "lunas");
+  }
 
-    // ========================================
-    // RELASI
-    // ========================================
-    public function santri()
-    {
-        return $this->belongsTo(Santri::class);
+  public function scopePending($query)
+  {
+    return $query->where("status", "pending");
+  }
+
+  public function scopeBelumBayar($query)
+  {
+    return $query->where("status", "belum_bayar");
+  }
+  // Hapus file bukti hanya kalau sudah tidak dipakai baris Infak mana pun
+  public static function hapusBuktiYatim(?string $path): void
+  {
+    if (!$path || static::where("bukti_pembayaran", $path)->exists()) {
+      return;
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    Storage::disk("local")->delete($path);
 
-    // ========================================
-    // ACCESSOR
-    // ========================================
-    public function getJumlahRupiahAttribute()
-    {
-        return 'Rp ' . number_format($this->jumlah, 0, ',', '.');
+    $lama = public_path("images/" . $path);
+    if (file_exists($lama)) {
+      unlink($lama);
     }
-
-    public function getNamaBulanAttribute()
-    {
-        $bulan = [
-            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-        ];
-        return $bulan[$this->bulan] ?? '-';
-    }
-
-    // ========================================
-    // SCOPE
-    // ========================================
-    public function scopeLunas($query)
-    {
-        return $query->where('status', 'lunas');
-    }
-
-    public function scopePending($query)
-    {
-        return $query->where('status', 'pending');
-    }
-
-    public function scopeBelumBayar($query)
-    {
-        return $query->where('status', 'belum_bayar');
-    }
+  }
 }

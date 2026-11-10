@@ -31,7 +31,7 @@
             <div class="filter-group">
     <select name="kelas">
         <option value="">Semua Kelas</option>
-        @foreach(['MDA 1', 'MDA 2', 'MDA 3', 'MDA 4'] as $kelas)
+        @foreach(App\Models\Santri::KELAS as $kelas)
             <option value="{{ $kelas }}" {{ request('kelas') == $kelas ? 'selected' : '' }}>
                 {{ $kelas }}
             </option>
@@ -62,6 +62,13 @@
         </form>
     </div>
 
+    @if(session('warning'))
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            {{ session('warning') }}
+        </div>
+    @endif
+      
     @if(session('success'))
         <div class="alert alert-success">
             <i class="bi bi-check-circle"></i>
@@ -95,12 +102,12 @@
                             </td>
                             <td><strong>{{ $item->nisa ?? '-' }}</strong></td>
                             <td>{{ $item->nama }}</td>
-                            <td><span class="badge-mapel">{{ $item->kelas }}</span></td>
+                            <td><span class="badge-mapel">{{ $item->kelas_sekarang ?? '-' }}</span></td>
                             <td>{{ $item->jenis_kelamin }}</td>
                             <td>
-                                <span class="status-badge {{ $item->status == 'aktif' ? 'active' : 'inactive' }}">
+                                <span class="status-badge {{ $item->status_santri == 'aktif' ? 'active' : 'inactive' }}">
                                     <span class="status-dot"></span>
-                                    {{ ucfirst($item->status ?? 'aktif') }}
+                                    {{ ucfirst($item->status_santri ?? 'aktif') }}
                                 </span>
                             </td>
                             <td>
@@ -108,9 +115,13 @@
                                     <a href="{{ route('admin.santri.edit', $item->id) }}" class="btn-action btn-edit" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="{{ route('admin.santri.toggle-status', $item->id) }}" class="btn-action btn-toggle" title="{{ $item->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
-                                        <i class="bi {{ $item->is_active ? 'bi-eye-slash' : 'bi-eye' }}"></i>
-                                    </a>
+                                    <form action="{{ route('admin.santri.toggle-status', $item->id) }}" method="POST" class="toggle-form">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn-action btn-toggle" title="{{ $item->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
+                                            <i class="bi {{ $item->is_active ? 'bi-eye-slash' : 'bi-eye' }}"></i>
+                                        </button>
+                                    </form>
                                     <form action="{{ route('admin.santri.destroy', $item->id) }}" method="POST" class="delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -141,7 +152,7 @@
 
         @if($santri->hasPages())
             <div class="pagination-wrapper">
-                {{ $santri->appends(request()->query())->links() }}
+                {{ $santri->links() }}
             </div>
         @endif
     </div>

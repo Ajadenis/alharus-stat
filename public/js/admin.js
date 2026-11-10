@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ========================================
     // AUTO HIDE ALERT (TETAP SAMA)
     // ========================================
-    const alerts = document.querySelectorAll(".alert");
+    const alerts = document.querySelectorAll(".alert:not(.alert-danger)");
     alerts.forEach(alert => {
         setTimeout(() => {
             alert.style.opacity = "0";

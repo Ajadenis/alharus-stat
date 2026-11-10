@@ -100,9 +100,13 @@
                                     <a href="{{ route('admin.fasilitas.edit', $item->id) }}" class="btn-action btn-edit" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="{{ route('admin.fasilitas.toggle-status', $item->id) }}" class="btn-action btn-toggle" title="{{ $item->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
-                                        <i class="bi {{ $item->is_active ? 'bi-eye-slash' : 'bi-eye' }}"></i>
-                                    </a>
+                                    <form action="{{ route('admin.fasilitas.toggle-status', $item->id) }}" method="POST" class="toggle-form">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn-action btn-toggle" title="{{ $item->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
+                                            <i class="bi {{ $item->is_active ? 'bi-eye-slash' : 'bi-eye' }}"></i>
+                                        </button>
+                                    </form>
                                     <form action="{{ route('admin.fasilitas.destroy', $item->id) }}" method="POST" class="delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -133,7 +137,7 @@
 
         @if($fasilitas->hasPages())
             <div class="pagination-wrapper">
-                {{ $fasilitas->appends(request()->query())->links() }}
+                {{ $fasilitas->links() }}
             </div>
         @endif
     </div>

@@ -12,7 +12,7 @@ class KegiatanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Kegiatan::where('is_active', true);
+        $query = Kegiatan::active();
 
         // Pencarian
         if ($request->has('search') && !empty($request->search)) {
@@ -25,17 +25,17 @@ class KegiatanController extends Controller
         }
 
         // Urutkan dari terbaru
-        $data = $query->latest()->paginate(6);
+        $data = $query->latest()->paginate(6)->withQueryString();
 
         // Daftar kategori untuk filter
         $kategoriList = Kegiatan::select('kategori')
                                 ->distinct()
                                 ->whereNotNull('kategori')
-                                ->where('is_active', true)
+                                ->active()
                                 ->pluck('kategori');
 
         // Kegiatan terbaru untuk sidebar
-        $kegiatanTerbaru = Kegiatan::where('is_active', true)
+        $kegiatanTerbaru = Kegiatan::active()
                                    ->latest()
                                    ->limit(5)
                                    ->get();
@@ -49,14 +49,14 @@ class KegiatanController extends Controller
     public function show($slug)
     {
         $item = Kegiatan::where('slug', $slug)
-                        ->where('is_active', true)
+                        ->active()
                         ->firstOrFail();
 
         // Tambah views
         $item->increment('views');
 
         // Kegiatan lain untuk sidebar
-        $kegiatanTerbaru = Kegiatan::where('is_active', true)
+        $kegiatanTerbaru = Kegiatan::active()
                                    ->where('slug', '!=', $slug)
                                    ->latest()
                                    ->limit(5)
@@ -64,7 +64,7 @@ class KegiatanController extends Controller
 
         // Kegiatan terkait (kategori sama)
         $kegiatanTerkait = Kegiatan::where('kategori', $item->kategori)
-                                   ->where('is_active', true)
+                                   ->active()
                                    ->where('slug', '!=', $slug)
                                    ->limit(3)
                                    ->get();

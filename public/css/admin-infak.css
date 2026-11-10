@@ -166,8 +166,6 @@
    ======================================== */
 .table-container {
     background: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
     overflow: hidden;
     flex: 1;
 }
@@ -222,7 +220,6 @@
 }
 
 .admin-table th {
-    padding: 0.8rem 1rem;
     text-align: left;
     font-weight: 600;
     color: #555;
@@ -234,17 +231,12 @@
 }
 
 .admin-table td {
-    padding: 0.8rem 1rem;
     border-bottom: 1px solid #f0f0f0;
     vertical-align: middle;
 }
 
 .admin-table tbody tr {
     transition: all 0.2s ease;
-}
-
-.admin-table tbody tr:hover {
-    background: #f8fafc;
 }
 
 .admin-table tbody tr:last-child td {
@@ -278,7 +270,6 @@
    ======================================== */
 @media (min-width: 1200px) {
     .admin-wrapper {
-        padding: 0 1.5rem;
         min-height: 100vh;
     }
 
@@ -295,11 +286,6 @@
         font-size: 1rem;
     }
 
-    .admin-table th,
-    .admin-table td {
-        padding: 1rem 1.2rem;
-    }
-
     .bukti-preview {
         width: 48px;
         height: 48px;
@@ -311,7 +297,6 @@
    ======================================== */
 @media (min-width: 992px) and (max-width: 1199px) {
     .admin-wrapper {
-        padding: 0 1rem;
         min-height: 100vh;
     }
 
@@ -323,14 +308,10 @@
         padding: 0.6rem 1.4rem;
         font-size: 0.95rem;
     }
-
-    .admin-table {
-        font-size: 0.9rem;
-    }
-
-    .admin-table th,
+    admin-table th,
     .admin-table td {
-        padding: 0.8rem 1rem;
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
     }
 }
 
@@ -339,7 +320,6 @@
    ======================================== */
 @media (min-width: 768px) and (max-width: 991px) {
     .admin-wrapper {
-        padding: 0 0.8rem;
         min-height: 100vh !important;
         display: flex;
         flex-direction: column;
@@ -375,7 +355,6 @@
     /* TABLE - FULL HEIGHT */
     .table-container {
         flex: 1;
-        border-radius: 0.8rem;
     }
 
     .table-header-toolbar {
@@ -386,11 +365,6 @@
 
     .admin-table {
         font-size: 0.85rem;
-    }
-
-    .admin-table th,
-    .admin-table td {
-        padding: 0.6rem 0.7rem;
     }
 
     .bukti-preview {
@@ -453,7 +427,6 @@
    ======================================== */
 @media (max-width: 767px) {
     .admin-wrapper {
-        padding: 0 0.5rem;
         min-height: 100vh !important;
         display: flex;
         flex-direction: column;
@@ -469,7 +442,6 @@
     }
 
     .admin-header-section .header-left {
-        flex: 1 1 auto;
         min-width: 0;
     }
 
@@ -504,7 +476,6 @@
     /* TABLE - FULL HEIGHT */
     .table-container {
         flex: 1;
-        border-radius: 0.6rem;
     }
 
     .table-header-toolbar {
@@ -624,7 +595,6 @@
    ======================================== */
 @media (max-width: 480px) {
     .admin-wrapper {
-        padding: 0 0.3rem;
         min-height: 100vh !important;
     }
 
@@ -716,7 +686,59 @@
     }
 
     .alert {
-        padding: 0.3rem 0.5rem;
         font-size: 0.7rem;
+    }
+}
+/* Tabel Infak menjadi kartu di layar HP */
+@media (max-width: 767px) {
+    .table-responsive {
+        padding: 0.8rem 0.6rem 0.2rem;
+    }
+
+    .admin-table,
+    .admin-table tbody,
+    .admin-table tr,
+    .admin-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .admin-table thead {
+        display: none;
+    }
+
+    .admin-table tbody tr {
+        margin: 0 0 0.8rem;
+        padding: 0.3rem 0.9rem;
+        border: 1px solid #e8e8e8;
+        border-radius: 0.6rem;
+        background: #fff;
+    }
+
+    .admin-table td[data-label] {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.5rem 0;
+        border-bottom: none;
+        text-align: right;
+        font-size: 0.85rem;
+        overflow-wrap: anywhere;
+    }
+
+    .admin-table td[data-label] + td[data-label] {
+        border-top: 1px dashed #eee;
+    }
+
+    .admin-table td[data-label]::before {
+        content: attr(data-label);
+        flex-shrink: 0;
+        color: #888;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        text-align: left;
     }
 }

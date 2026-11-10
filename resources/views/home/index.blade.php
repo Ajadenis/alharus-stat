@@ -2,7 +2,6 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 @endpush
 
 @section('title', 'Beranda - MDT Al-Harus')
@@ -26,8 +25,8 @@
         <div class="slideshow">
             @php
                 $slides = [
-                    ['image' => 'kaulinan-barudak/Rerebonan/rebon-7.jpg', 'caption' => 'Kegiatan Rerebonan - Kaulinan Barudak'],
-                    ['image' => 'kaulinan-barudak/Sapintrong/sapintrong-4.jpg', 'caption' => 'Kegiatan Sapintrong - Kaulinan Barudak'],
+                    ['image' => 'kaulinan-barudak/Rerebonan/rebon-6.jpg', 'caption' => 'Kegiatan Rerebonan - Kaulinan Barudak'],
+                    ['image' => 'kaulinan-barudak/Sapintrong/sapintrong-5.jpg', 'caption' => 'Kegiatan Sapintrong - Kaulinan Barudak'],
                     ['image' => 'isra-miraj/15.jpg', 'caption' => 'Peringatan Isra Mi\'raj'],
                 ];
             @endphp
@@ -37,14 +36,14 @@
                     <img 
                         src="{{ asset('images/' . $slide['image']) }}" 
                         alt="{{ $slide['caption'] }}"
-                        onerror="this.src='{{ asset('images/default.jpg') }}'"
+                        onerror="this.onerror=null;this.src='{{ asset('images/default.jpg') }}'"
                     />
                     <div class="slide-caption">{{ $slide['caption'] }}</div>
                 </div>
             @endforeach
 
-            <a class="prev" onclick="plusSlides(-1)">❮</a>
-            <a class="next" onclick="plusSlides(1)">❯</a>
+            <a class="prev" href="#" role="button" aria-label="Slide sebelumnya" onclick="plusSlides(-1); return false;">❮</a>
+            <a class="next" href="#" role="button" aria-label="Slide berikutnya" onclick="plusSlides(1); return false;">❯</a>
         </div>
         <div class="dot-container">
             @foreach($slides as $key => $slide)
@@ -70,7 +69,7 @@
                         <img 
                             src="{{ asset('images/' . $item->gambar) }}" 
                             alt="{{ $item->judul }}"
-                            onerror="this.src='{{ asset('images/default.jpg') }}'"
+                            onerror="this.onerror=null;this.src='{{ asset('images/default.jpg') }}'"
                         >
                         @if($item->kategori)
                             <span class="card-badge">{{ $item->kategori }}</span>

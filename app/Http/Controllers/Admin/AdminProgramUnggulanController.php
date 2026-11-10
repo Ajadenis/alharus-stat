@@ -5,152 +5,120 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProgramUnggulan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use App\Http\Controllers\Concerns\HandlesImages;
 
 class AdminProgramUnggulanController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = ProgramUnggulan::query();
+  use HandlesImages;
+  public function index(Request $request)
+  {
+    $query = ProgramUnggulan::query();
 
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where('nama', 'LIKE', "%{$search}%")
-                  ->orWhere('kategori', 'LIKE', "%{$search}%");
-        }
-
-        if ($request->has('kategori') && !empty($request->kategori)) {
-            $query->where('kategori', $request->kategori);
-        }
-
-        if ($request->has('status') && !empty($request->status) && $request->status != 'semua') {
-            $query->where('is_active', $request->status == 'aktif');
-        }
-
-        $programs = $query->latest()->paginate(10);
-
-        $kategoriList = ProgramUnggulan::select('kategori')
-                                       ->distinct()
-                                       ->whereNotNull('kategori')
-                                       ->pluck('kategori');
-
-        return view('admin.program.index', compact('programs', 'kategoriList'));
+    if ($request->has("search") && !empty($request->search)) {
+      $search = $request->search;
+      $query->where(function ($q) use ($search) {
+        $q->where("nama", "LIKE", "%{$search}%")->orWhere("kategori", "LIKE", "%{$search}%");
+      });
     }
 
-    public function create()
-    {
-        return view('admin.program.create');
+    if ($request->has("kategori") && !empty($request->kategori)) {
+      $query->where("kategori", $request->kategori);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'kategori' => 'nullable|string|max:100',
-            'icon' => 'nullable|string|max:50',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
-        ]);
-
-        $data = $request->all();
-        $data['slug'] = Str::slug($request->nama);
-        $data['is_active'] = $request->has('is_active');
-
-        if ($request->hasFile('foto')) {
-    $file = $request->file('foto');
-    $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-    $destinationPath = public_path('images/program');
-
-    if (!file_exists($destinationPath)) {
-        mkdir($destinationPath, 0755, true);
+    if ($request->has("status") && !empty($request->status) && $request->status != "semua") {
+      $query->where("is_active", $request->status == "aktif");
     }
 
-    $manager = ImageManager::usingDriver(Driver::class);
-    $image = $manager->decodePath($file->getRealPath());
-    $image->scale(width: 2000, height: 2000);
-    $image->save($destinationPath . '/' . $filename);
+    $programs = $query
+      ->latest()
+      ->paginate(10)
+      ->withQueryString();
 
-    $data['foto'] = $filename;
-}
+    $kategoriList = ProgramUnggulan::select("kategori")
+      ->distinct()
+      ->whereNotNull("kategori")
+      ->pluck("kategori");
 
-        ProgramUnggulan::create($data);
+    return view("admin.program.index", compact("programs", "kategoriList"));
+  }
 
-        return redirect()->route('admin.program.index')
-                         ->with('success', 'Program unggulan berhasil ditambahkan!');
+  private function rules(): array
+  {
+    return [
+      "nama" => "required|string|max:255",
+      "deskripsi" => "required|string",
+      "kategori" => "nullable|string|max:100",
+      "icon" => "nullable|string|max:50",
+      "foto" => "nullable|image|mimes:jpeg,png,jpg,webp|max:10240",
+    ];
+  }
+
+  // Validasi, lalu siapkan data siap simpan (hanya field yang tervalidasi)
+  private function dataTervalidasi(Request $request, ?ProgramUnggulan $program = null): array
+  {
+    $data = $request->validate($this->rules());
+    $data["is_active"] = $request->has("is_active");
+
+    if ($request->hasFile("foto")) {
+      $this->hapusGambar($program?->foto, "program"); // aman bila belum ada foto lama
+      $data["foto"] = $this->simpanGambar($request->file("foto"), "program", $data["nama"]);
     }
 
-    public function edit(int $id)
-    {
-        $program = ProgramUnggulan::findOrFail($id);
-        return view('admin.program.edit', compact('program'));
-    }
+    return $data;
+  }
 
-    public function update(Request $request,int $id)
-    {
-        $program = ProgramUnggulan::findOrFail($id);
+  public function create()
+  {
+    return view("admin.program.create");
+  }
 
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'kategori' => 'nullable|string|max:100',
-            'icon' => 'nullable|string|max:50',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
-        ]);
+  public function store(Request $request)
+  {
+    ProgramUnggulan::create($this->dataTervalidasi($request));
 
-        $data = $request->all();
-        $data['is_active'] = $request->has('is_active');
+    return redirect()
+      ->route("admin.program.index")
+      ->with("success", "Program berhasil ditambahkan!");
+  }
 
-        if ($request->hasFile('foto')) {
-    if ($program->foto && file_exists(public_path('images/program/' . $program->foto))) {
-        unlink(public_path('images/program/' . $program->foto));
-    }
+  public function edit(int $id)
+  {
+    $program = ProgramUnggulan::findOrFail($id);
+    return view("admin.program.edit", compact("program"));
+  }
 
-    $file = $request->file('foto');
-    $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-    $destinationPath = public_path('images/program');
+  public function update(Request $request, int $id)
+  {
+    $program = ProgramUnggulan::findOrFail($id);
+    $program->update($this->dataTervalidasi($request, $program));
 
-    if (!file_exists($destinationPath)) {
-        mkdir($destinationPath, 0755, true);
-    }
+    return redirect()
+      ->route("admin.program.index")
+      ->with("success", "Program berhasil diperbarui!");
+  }
 
-    $manager = ImageManager::usingDriver(Driver::class);
-    $image = $manager->decodePath($file->getRealPath());
-    $image->scale(width: 2000, height: 2000);
-    $image->save($destinationPath . '/' . $filename);
+  public function destroy(int $id)
+  {
+    $program = ProgramUnggulan::findOrFail($id);
 
-    $data['foto'] = $filename;
-}
+    $this->hapusGambar($program->foto, "program");
 
-        $program->update($data);
+    $program->delete();
 
-        return redirect()->route('admin.program.index')
-                         ->with('success', 'Program unggulan berhasil diperbarui!');
-    }
+    return redirect()
+      ->route("admin.program.index")
+      ->with("success", "Program unggulan berhasil dihapus!");
+  }
 
-    public function destroy(int $id)
-    {
-        $program = ProgramUnggulan::findOrFail($id);
+  public function toggleStatus(int $id)
+  {
+    $program = ProgramUnggulan::findOrFail($id);
+    $program->is_active = !$program->is_active;
+    $program->save();
 
-        if ($program->foto && file_exists(public_path('images/program/' . $program->foto))) {
-            unlink(public_path('images/program/' . $program->foto));
-        }
-
-        $program->delete();
-
-        return redirect()->route('admin.program.index')
-                         ->with('success', 'Program unggulan berhasil dihapus!');
-    }
-
-    public function toggleStatus(int $id)
-    {
-        $program = ProgramUnggulan::findOrFail($id);
-        $program->is_active = !$program->is_active;
-        $program->save();
-
-        $status = $program->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        return redirect()->route('admin.program.index')
-                         ->with('success', "Program berhasil {$status}!");
-    }
+    $status = $program->is_active ? "diaktifkan" : "dinonaktifkan";
+    return redirect()
+      ->route("admin.program.index")
+      ->with("success", "Program berhasil {$status}!");
+  }
 }

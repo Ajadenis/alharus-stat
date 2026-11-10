@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
     <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MDT Al-Harus</title>
-
+    <title>@yield('title', 'MDT Al-Harus')</title>
+    <meta name="description" content="@yield('description', 'MDT Al-Harus')" />
+      
     <!-- favicon -->
     <link rel="shortcut icon" href="{{ asset('images/logo-title.ico') }}" />
 
@@ -21,10 +22,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-
-    <!-- Feather Icon -->
-    <script src="https://unpkg.com/feather-icons"></script>
-
+      
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -43,25 +41,8 @@
     
     @include('partials.footer')
 
-
     <!-- JS -->
     <script src="{{ asset('js/toggle.js') }}"></script>
     @stack('slideshow')
-
-    <!-- Feather Icon -->
-    <script>
-      feather.replace();
-    </script>
-
-    <!-- Vercel -->
-    <script>
-      window.va =
-        window.va ||
-        function () {
-          (window.vaq = window.vaq || []).push(arguments);
-        };
-    </script>
-    <script defer src="/_vercel/insights/script.js"></script>
-
 </body>
 </html>

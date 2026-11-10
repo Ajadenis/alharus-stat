@@ -134,8 +134,8 @@
                         <!-- Upload Bukti -->
                         <div class="file-upload">
                             <label><i class="bi bi-upload"></i> Upload Bukti Pembayaran</label>
-                            <input type="file" id="buktiUpload" accept="image/*">
-                            <small>Format: JPG, PNG. Maks: 2MB</small>
+                            <input type="file" id="buktiUpload" accept="image/*,application/pdf">
+                            <small>Format: foto (JPG, PNG, WebP, HEIC, dll) atau PDF. Maks: 10MB</small>
                         </div>
 
                         <div class="file-upload">
@@ -171,6 +171,29 @@
         let selectedBulans = [];
         let currentTahun = null;
         let currentInfakData = [];
+        // Semua permintaan ke server lewat sini: selalu minta balasan JSON,
+        // dan ubah kesalahan validasi atau server menjadi pesan yang terbaca
+        async function kirim(url, options = {}) {
+            options.headers = Object.assign({
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }, options.headers || {});
+
+            const response = await fetch(url, options);
+            const data = await response.json().catch(() => null);
+
+            if (!data) {
+                throw new Error('Balasan server tidak terbaca (kode ' + response.status + ').');
+            }
+
+            // Kesalahan validasi Laravel: pakai pesan pertamanya
+            if (!response.ok && data.errors) {
+                data.message = Object.values(data.errors)[0][0];
+            }
+
+            return data;
+          
+        }
 
         // ========================================
         // SEARCH
@@ -185,17 +208,13 @@
             loading.style.display = 'block';
             resultSection.style.display = 'none';
 
-            fetch('{{ route("infak.public.cari") }}', {
+            kirim('{{ route("infak.public.cari") }}', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nisa: nisa })
             })
-            .then(response => response.json())
             .then(data => {
-                loading.style.display = 'none';
+            loading.style.display = 'none';
 
                 if (data.status === 'success') {
                     currentSantriId = data.data.santri.id;
@@ -227,13 +246,13 @@
                     Swal.fire('Error', data.message || 'Santri tidak ditemukan!', 'error');
                 }
             })
-            .catch(() => {
+            .catch(error => {
                 loading.style.display = 'none';
-                Swal.fire('Error', 'Terjadi kesalahan!', 'error');
+                Swal.fire('Error', error.message || 'Terjadi kesalahan!', 'error');
             });
         }
 
-        nisaInput.addEventListener('keypress', function(e) {
+        nisaInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') searchSantri();
         });
 
@@ -245,17 +264,14 @@
         window.gantiTahun = function(tahun) {
             currentTahun = parseInt(tahun);
 
-            fetch(`{{ route("infak.public.get-by-tahun") }}?santri_id=${currentSantriId}&tahun=${tahun}`, {
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(response => response.json())
+            kirim(`{{ route("infak.public.get-by-tahun") }}?santri_id=${currentSantriId}&tahun=${tahun}`)
             .then(data => {
                 if (data.status === 'success') {
                     renderInfakTable(data.data.infak, tahun);
                 }
+            })
+            .catch(error => {
+                Swal.fire('Error', error.message || 'Gagal memuat data tahun ini.', 'error');
             });
         };
 
@@ -297,12 +313,13 @@
             document.getElementById('tahunDisplay').textContent = '| Tahun ' + tahun;
 
             // Select All
-            document.getElementById('selectAll').addEventListener('change', function() {
-                document.querySelectorAll('.infak-checkbox:not(:disabled)').forEach(cb => {
-                    cb.checked = this.checked;
-                });
-                updateTotal();
+            document.getElementById('selectAll').checked = false;
+            document.getElementById('selectAll').onchange = function() {
+            document.querySelectorAll('.infak-checkbox:not(:disabled)').forEach(cb => {
+                cb.checked = this.checked;
             });
+            updateTotal();
+       };
 
             document.querySelectorAll('.infak-checkbox').forEach(cb => {
                 cb.addEventListener('change', updateTotal);
@@ -380,27 +397,27 @@
                 Swal.fire('Peringatan', 'Upload bukti pembayaran!', 'warning');
                 return;
             }
+            
+            if (bukti.files[0].size > 10 * 1024 * 1024) {
+                Swal.fire('Peringatan', 'Ukuran bukti maksimal 10 MB.', 'warning');
+                return;
+            }
 
             const formData = new FormData();
             formData.append('santri_id', currentSantriId);
             formData.append('bulan', JSON.stringify(selectedBulans));
             formData.append('tahun', currentTahun);   // 👈 TAHUN DARI DROPDOWN
             formData.append('metode', metode.value);
-            formData.append('jumlah', selectedBulans.length * currentNominal);
             formData.append('bukti', bukti.files[0]);
             formData.append('nama_pengirim', document.getElementById('namaPengirim').value || '');
 
             this.disabled = true;
             this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mengirim...';
 
-            fetch('{{ route("infak.public.upload") }}', {
+            kirim('{{ route("infak.public.upload") }}', {
                 method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
                 body: formData
             })
-            .then(response => response.json())
             .then(data => {
                 this.disabled = false;
                 this.innerHTML = '<i class="bi bi-send"></i> Kirim Bukti & Konfirmasi';

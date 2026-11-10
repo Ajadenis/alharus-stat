@@ -3,230 +3,177 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 use App\Models\Santri;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Helpers\SantriHelper;
+use Illuminate\Support\Str;
+use App\Http\Controllers\Concerns\HandlesImages;
+use App\Models\Infak;
 
 class AdminSantriController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Santri::query();
+  use HandlesImages;
+  public function index(Request $request)
+  {
+    $query = Santri::query();
 
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('nama', 'LIKE', "%{$search}%")
-                  ->orWhere('nisa', 'LIKE', "%{$search}%")
-                  ->orWhere('nis', 'LIKE', "%{$search}%");
-            });
-        }
-
-        if ($request->has('kelas') && !empty($request->kelas)) {
-            $query->where('kelas', $request->kelas);
-        }
-
-        if ($request->has('jenis_kelamin') && !empty($request->jenis_kelamin)) {
-            $query->where('jenis_kelamin', $request->jenis_kelamin);
-        }
-
-        if ($request->has('status') && !empty($request->status) && $request->status != 'semua') {
-            $query->where('status', $request->status);
-        }
-
-        $santri = $query->latest()->paginate(10);
-         $kelasList = ['MDA 1', 'MDA 2', 'MDA 3', 'MDA 4'];
-
-        return view('admin.santri.index', compact('santri', 'kelasList'));
+    if ($request->has("search") && !empty($request->search)) {
+      $search = $request->search;
+      $query->where(function ($q) use ($search) {
+        $q->where("nama", "LIKE", "%{$search}%")
+          ->orWhere("nisa", "LIKE", "%{$search}%")
+          ->orWhere("nis", "LIKE", "%{$search}%");
+      });
     }
 
-    public function create()
-    {
-        return view('admin.santri.create');
+    if ($request->has("kelas") && !empty($request->kelas)) {
+      $query->where("kelas_sekarang", $request->kelas);
     }
 
-    public function store(Request $request)
-{
-    // ========================================
-    // 1. VALIDASI
-    // ========================================
-    $validated = $request->validate([
-        'nama' => 'required|string|max:255',
-        'nis' => 'required|string|unique:santris,nis',
-        'nisa' => 'required|string|unique:santris,nisa',
-        'tahun_masuk' => 'required|integer|min:2000|max:' . date('Y'),
-        'kelas_sekarang' => 'nullable|in:MDA 1,MDA 2,MDA 3,MDA 4',
-        'status_santri' => 'required|in:aktif,lulus,keluar',
-        'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-        'alamat' => 'nullable|string',
-        'tanggal_lahir' => 'nullable|date',
-        'nama_orang_tua' => 'nullable|string|max:255',
-        'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-    ]);
-
-    // ========================================
-    // 2. DATA DASAR
-    // ========================================
-    $data = $request->all();
-    
-    // ========================================
-    // 3. OTOMATIS HITUNG KELAS
-    // ========================================
-    // Jika kelas_sekarang KOSONG, hitung otomatis
-    if (empty($data['kelas_sekarang'])) {
-        $data['kelas_sekarang'] = SantriHelper::hitungKelas($request->tahun_masuk);
-    }
-    
-    // ========================================
-    // 4. STATUS AKTIF
-    // ========================================
-    $data['is_active'] = $request->has('is_active') ? true : false;
-    
-    // ========================================
-    // 5. AUTO-SET STATUS_SANTRI
-    // ========================================
-    // Jika kelas otomatis jadi "Lulus", set status jadi lulus
-    if ($data['kelas_sekarang'] === 'Lulus' && $request->status_santri === 'aktif') {
-        $data['status_santri'] = 'lulus';
-    }
-    
-    // ========================================
-    // 6. UPLOAD FOTO
-    // ========================================
-    if ($request->hasFile('foto')) {
-        $file = $request->file('foto');
-        $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-        
-        // Buat folder jika belum ada
-        $folder = public_path('images/santri');
-        if (!file_exists($folder)) {
-            mkdir($folder, 0755, true);
-        }
-        
-        $file->move($folder, $filename);
-        $data['foto'] = $filename;
-    }
-    
-    // ========================================
-    // 7. SIMPAN
-    // ========================================
-    Santri::create($data);
-    
-    // ========================================
-    // 8. REDIRECT
-    // ========================================
-    return redirect()->route('admin.santri.index')
-                     ->with('success', 'Santri berhasil ditambahkan!');
-}
-
-    public function edit(int $id)
-    {
-        $santri = Santri::findOrFail($id);
-        return view('admin.santri.edit', compact('santri'));
+    if ($request->has("jenis_kelamin") && !empty($request->jenis_kelamin)) {
+      $query->where("jenis_kelamin", $request->jenis_kelamin);
     }
 
-public function update(Request $request, $id)
-{
+    if ($request->has("status") && !empty($request->status) && $request->status != "semua") {
+      $query->where("status_santri", $request->status);
+    }
+
+    $santri = $query
+      ->latest()
+      ->paginate(10)
+      ->withQueryString();
+    $kelasList = Santri::KELAS;
+
+    return view("admin.santri.index", compact("santri", "kelasList"));
+  }
+
+  private function rules(?int $id = null): array
+  {
+    return [
+      "nama" => "required|string|max:255",
+      "nis" => ["required", "string", Rule::unique("santris", "nis")->ignore($id)],
+      "nisa" => ["required", "string", Rule::unique("santris", "nisa")->ignore($id)],
+      "tahun_masuk" => "required|integer|min:2000|max:" . date("Y"),
+      "kelas_sekarang" => ["nullable", Rule::in(Santri::KELAS)],
+      "status_santri" => "required|in:aktif,lulus,keluar",
+      "jenis_kelamin" => "required|in:Laki-laki,Perempuan",
+      "alamat" => "nullable|string",
+      "tanggal_lahir" => "nullable|date",
+      "nama_orang_tua" => "nullable|string|max:255",
+      "nama_wali" => "nullable|string|max:255",
+      "telepon_wali" => "nullable|string|max:20",
+      "foto" => "nullable|image|mimes:jpeg,png,jpg,webp|max:2048",
+    ];
+  }
+
+  // Validasi, lalu siapkan data: kelas otomatis, status, is_active, dan foto
+  private function dataTervalidasi(Request $request, ?Santri $santri = null): array
+  {
+    $data = $request->validate($this->rules($santri?->id));
+
+    // Kelas otomatis dari tahun masuk kalau tidak dipilih
+    if (empty($data["kelas_sekarang"])) {
+      $data["kelas_sekarang"] = SantriHelper::hitungKelas($data["tahun_masuk"]);
+    }
+
+    // Sudah lulus menurut kelas: statusnya ikut lulus
+    if ($data["kelas_sekarang"] === "Lulus" && $data["status_santri"] === "aktif") {
+      $data["status_santri"] = "lulus";
+    }
+
+    // is_active selalu mengikuti status_santri
+    $data["is_active"] = $data["status_santri"] === "aktif";
+
+    // Foto (tanpa resize, batas 2 MB)
+    if ($request->hasFile("foto")) {
+      $this->hapusGambar($santri?->foto, "santri");
+
+      $file = $request->file("foto");
+      $filename = time() . "_" . Str::slug($data["nama"]) . "." . $this->ekstensiAman($file);
+
+      $folder = public_path("images/santri");
+      if (!file_exists($folder)) {
+        mkdir($folder, 0755, true);
+      }
+
+      $file->move($folder, $filename);
+      $data["foto"] = $filename;
+    }
+
+    return $data;
+  }
+
+  public function create()
+  {
+    return view("admin.santri.create");
+  }
+
+  public function store(Request $request)
+  {
+    Santri::create($this->dataTervalidasi($request));
+
+    return redirect()
+      ->route("admin.santri.index")
+      ->with("success", "Santri berhasil ditambahkan!");
+  }
+
+  public function edit(int $id)
+  {
     $santri = Santri::findOrFail($id);
-    
-    // ========================================
-    // 1. VALIDASI
-    // ========================================
-    $validated = $request->validate([
-        'nama' => 'required|string|max:255',
-        'nis' => 'required|string|unique:santris,nis,' . $id,
-        'nisa' => 'required|string|unique:santris,nisa,' . $id,
-        'tahun_masuk' => 'required|integer|min:2000|max:' . date('Y'),
-        'kelas_sekarang' => 'nullable|in:MDA 1,MDA 2,MDA 3,MDA 4',
-        'status_santri' => 'required|in:aktif,lulus,keluar',
-        'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-        'alamat' => 'nullable|string',
-        'tanggal_lahir' => 'nullable|date',
-        'nama_orang_tua' => 'nullable|string|max:255',
-        'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-    ]);
-    
-    // ========================================
-    // 2. DATA DASAR
-    // ========================================
-    $data = $request->all();
-    
-    // ========================================
-    // 3. OTOMATIS HITUNG KELAS
-    // ========================================
-    if (empty($data['kelas_sekarang'])) {
-        $data['kelas_sekarang'] = SantriHelper::hitungKelas($request->tahun_masuk);
-    }
-    
-    // ========================================
-    // 4. STATUS AKTIF
-    // ========================================
-    $data['is_active'] = $request->has('is_active') ? true : false;
-    
-    // ========================================
-    // 5. AUTO-SET STATUS_SANTRI
-    // ========================================
-    if ($data['kelas_sekarang'] === 'Lulus' && $request->status_santri === 'aktif') {
-        $data['status_santri'] = 'lulus';
-    }
-    
-    // ========================================
-    // 6. UPLOAD FOTO BARU
-    // ========================================
-    if ($request->hasFile('foto')) {
-        // Hapus foto lama
-        if ($santri->foto && file_exists(public_path('images/santri/' . $santri->foto))) {
-            unlink(public_path('images/santri/' . $santri->foto));
-        }
-        
-        $file = $request->file('foto');
-        $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-        
-        $folder = public_path('images/santri');
-        if (!file_exists($folder)) {
-            mkdir($folder, 0755, true);
-        }
-        
-        $file->move($folder, $filename);
-        $data['foto'] = $filename;
-    }
-    
-    // ========================================
-    // 7. UPDATE
-    // ========================================
-    $santri->update($data);
-    
-    // ========================================
-    // 8. REDIRECT
-    // ========================================
-    return redirect()->route('admin.santri.index')
-                     ->with('success', 'Santri berhasil diperbarui!');
-}
+    return view("admin.santri.edit", compact("santri"));
+  }
 
-    public function destroy(int $id)
-    {
-        $santri = Santri::findOrFail($id);
+  public function update(Request $request, $id)
+  {
+    $santri = Santri::findOrFail($id);
+    $santri->update($this->dataTervalidasi($request, $santri));
 
-        if ($santri->foto && file_exists(public_path('images/santri/' . $santri->foto))) {
-            unlink(public_path('images/santri/' . $santri->foto));
-        }
+    return redirect()
+      ->route("admin.santri.index")
+      ->with("success", "Santri berhasil diperbarui!");
+  }
 
-        $santri->delete();
+  public function destroy(int $id)
+  {
+    $santri = Santri::findOrFail($id);
 
-        return redirect()->route('admin.santri.index')
-                         ->with('success', 'Santri berhasil dihapus!');
+    $this->hapusGambar($santri->foto, "santri");
+
+    $buktiList = Infak::where("santri_id", $santri->id)
+      ->pluck("bukti_pembayaran")
+      ->filter()
+      ->unique();
+
+    $santri->delete();
+
+    foreach ($buktiList as $path) {
+      Infak::hapusBuktiYatim($path);
     }
 
-    public function toggleStatus(int $id)
-    {
-        $santri = Santri::findOrFail($id);
-        $santri->is_active = !$santri->is_active;
-        $santri->status = $santri->is_active ? 'aktif' : 'keluar';
-        $santri->save();
+    return redirect()
+      ->route("admin.santri.index")
+      ->with("success", "Santri berhasil dihapus!");
+  }
 
-        $status = $santri->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        return redirect()->route('admin.santri.index')
-                         ->with('success', "Santri berhasil {$status}!");
+  public function toggleStatus(int $id)
+  {
+    $santri = Santri::findOrFail($id);
+
+    // Alumni tidak diubah lewat toggle; ubah statusnya lewat form edit
+    if ($santri->status_santri === "lulus") {
+      return redirect()
+        ->route("admin.santri.index")
+        ->with("warning", "Santri sudah lulus. Ubah statusnya lewat form edit jika perlu.");
     }
+
+    $santri->is_active = !$santri->is_active;
+    $santri->status_santri = $santri->is_active ? "aktif" : "keluar";
+    $santri->save();
+
+    $status = $santri->is_active ? "diaktifkan" : "dinonaktifkan";
+    return redirect()
+      ->route("admin.santri.index")
+      ->with("success", "Santri berhasil {$status}!");
+  }
 }

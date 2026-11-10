@@ -50,8 +50,8 @@
 
             <div class="form-group">
                 <label for="mata_pelajaran">Mata Pelajaran</label>
-                <input type="text" name="mata_pelajaran" id="mata_pelajaran" class="form-control @error('mata_pelajaran') is-invalid @enderror" value="{{ old('mata_pelajaran') }}" required placeholder="Contoh: Matematika, Bahasa Arab, dll">
-                @error('mata_pelajaran')
+                <input type="text" name="mata_pelajaran" id="mata_pelajaran" class="form-control @error('mata_pelajaran') is-invalid @enderror" value="{{ old('mata_pelajaran') }}" placeholder="Kosongkan jika tidak mengajar mata pelajaran">
+              @error('mata_pelajaran')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
@@ -59,7 +59,7 @@
             <div class="form-group">
                 <label for="foto">Foto</label>
                 <input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror" accept="image/*">
-                <class="form-text">Format: JPG, PNG, JPEG, WEBP. Maks: 2MB</small>
+                <small class="form-text">Format: JPG, PNG, JPEG, WEBP. Maks: 2MB</small>
                 @error('foto')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror

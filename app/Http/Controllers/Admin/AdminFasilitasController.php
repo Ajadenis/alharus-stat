@@ -5,154 +5,121 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Fasilitas;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use App\Http\Controllers\Concerns\HandlesImages;
 
 class AdminFasilitasController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Fasilitas::query();
+  use HandlesImages;
+  public function index(Request $request)
+  {
+    $query = Fasilitas::query();
 
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where('nama', 'LIKE', "%{$search}%")
-                  ->orWhere('kategori', 'LIKE', "%{$search}%");
-        }
-
-        if ($request->has('kategori') && !empty($request->kategori)) {
-            $query->where('kategori', $request->kategori);
-        }
-
-        if ($request->has('status') && !empty($request->status) && $request->status != 'semua') {
-            $query->where('is_active', $request->status == 'aktif');
-        }
-
-        $fasilitas = $query->latest()->paginate(10);
-
-        $kategoriList = Fasilitas::select('kategori')
-                                 ->distinct()
-                                 ->whereNotNull('kategori')
-                                 ->pluck('kategori');
-
-        return view('admin.fasilitas.index', compact('fasilitas', 'kategoriList'));
+    if ($request->has("search") && !empty($request->search)) {
+      $search = $request->search;
+      $query->where(function ($q) use ($search) {
+        $q->where("nama", "LIKE", "%{$search}%")->orWhere("kategori", "LIKE", "%{$search}%");
+      });
     }
 
-    public function create()
-    {
-        return view('admin.fasilitas.create');
+    if ($request->has("kategori") && !empty($request->kategori)) {
+      $query->where("kategori", $request->kategori);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'kategori' => 'nullable|string|max:100',
-            'icon' => 'nullable|string|max:50',
-            'jumlah' => 'nullable|integer|min:0',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
-            ]);
-
-        $data = $request->all();
-        $data['slug'] = Str::slug($request->nama);
-        $data['is_active'] = $request->has('is_active');
-
-        if ($request->hasFile('foto')) {
-    $file = $request->file('foto');
-    $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-    $destinationPath = public_path('images/fasilitas');
-
-    if (!file_exists($destinationPath)) {
-        mkdir($destinationPath, 0755, true);
+    if ($request->has("status") && !empty($request->status) && $request->status != "semua") {
+      $query->where("is_active", $request->status == "aktif");
     }
 
-    $manager = ImageManager::usingDriver(Driver::class);
-    $image = $manager->decodePath($file->getRealPath());
-    $image->scale(width: 2000, height: 2000);
-    $image->save($destinationPath . '/' . $filename);
+    $fasilitas = $query
+      ->latest()
+      ->paginate(10)
+      ->withQueryString();
 
-    $data['foto'] = $filename;
-}
+    $kategoriList = Fasilitas::select("kategori")
+      ->distinct()
+      ->whereNotNull("kategori")
+      ->pluck("kategori");
 
-        Fasilitas::create($data);
+    return view("admin.fasilitas.index", compact("fasilitas", "kategoriList"));
+  }
 
-        return redirect()->route('admin.fasilitas.index')
-                         ->with('success', 'Fasilitas berhasil ditambahkan!');
+  private function rules(): array
+  {
+    return [
+      "nama" => "required|string|max:255",
+      "deskripsi" => "nullable|string",
+      "kategori" => "nullable|string|max:100",
+      "icon" => "nullable|string|max:50",
+      "jumlah" => "nullable|integer|min:0",
+      "foto" => "nullable|image|mimes:jpeg,png,jpg,webp|max:10240",
+    ];
+  }
+
+  // Validasi, lalu siapkan data siap simpan (hanya field yang tervalidasi)
+  private function dataTervalidasi(Request $request, ?Fasilitas $fasilitas = null): array
+  {
+    $data = $request->validate($this->rules());
+    $data["is_active"] = $request->has("is_active");
+
+    if ($request->hasFile("foto")) {
+      $this->hapusGambar($fasilitas?->foto, "fasilitas"); // aman bila belum ada foto lama
+      $data["foto"] = $this->simpanGambar($request->file("foto"), "fasilitas", $data["nama"]);
     }
 
-    public function edit(int $id)
-    {
-        $fasilitas = Fasilitas::findOrFail($id);
-        return view('admin.fasilitas.edit', compact('fasilitas'));
-    }
+    return $data;
+  }
 
-    public function update(Request $request,int $id)
-    {
-        $fasilitas = Fasilitas::findOrFail($id);
+  public function create()
+  {
+    return view("admin.fasilitas.create");
+  }
 
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'kategori' => 'nullable|string|max:100',
-            'icon' => 'nullable|string|max:50',
-            'jumlah' => 'nullable|integer|min:0',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
-        ]);
+  public function store(Request $request)
+  {
+    Fasilitas::create($this->dataTervalidasi($request));
 
-        $data = $request->all();
-        $data['is_active'] = $request->has('is_active');
+    return redirect()
+      ->route("admin.fasilitas.index")
+      ->with("success", "Fasilitas berhasil ditambahkan!");
+  }
 
-        if ($request->hasFile('foto')) {
-    if ($fasilitas->foto && file_exists(public_path('images/fasilitas/' . $fasilitas->foto))) {
-        unlink(public_path('images/fasilitas/' . $fasilitas->foto));
-    }
+  public function edit(int $id)
+  {
+    $fasilitas = Fasilitas::findOrFail($id);
+    return view("admin.fasilitas.edit", compact("fasilitas"));
+  }
 
-    $file = $request->file('foto');
-    $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-    $destinationPath = public_path('images/fasilitas');
+  public function update(Request $request, int $id)
+  {
+    $fasilitas = Fasilitas::findOrFail($id);
+    $fasilitas->update($this->dataTervalidasi($request, $fasilitas));
 
-    if (!file_exists($destinationPath)) {
-        mkdir($destinationPath, 0755, true);
-    }
+    return redirect()
+      ->route("admin.fasilitas.index")
+      ->with("success", "Fasilitas berhasil diperbarui!");
+  }
 
-    $manager = ImageManager::usingDriver(Driver::class);
-    $image = $manager->decodePath($file->getRealPath());
-    $image->scale(width: 2000, height: 2000);
-    $image->save($destinationPath . '/' . $filename);
+  public function destroy(int $id)
+  {
+    $fasilitas = Fasilitas::findOrFail($id);
 
-    $data['foto'] = $filename;
-}
+    $this->hapusGambar($fasilitas->foto, "fasilitas");
 
-        $fasilitas->update($data);
+    $fasilitas->delete();
 
-        return redirect()->route('admin.fasilitas.index')
-                         ->with('success', 'Fasilitas berhasil diperbarui!');
-    }
+    return redirect()
+      ->route("admin.fasilitas.index")
+      ->with("success", "Fasilitas berhasil dihapus!");
+  }
 
-    public function destroy(int $id)
-    {
-        $fasilitas = Fasilitas::findOrFail($id);
+  public function toggleStatus(int $id)
+  {
+    $fasilitas = Fasilitas::findOrFail($id);
+    $fasilitas->is_active = !$fasilitas->is_active;
+    $fasilitas->save();
 
-        if ($fasilitas->foto && file_exists(public_path('images/fasilitas/' . $fasilitas->foto))) {
-            unlink(public_path('images/fasilitas/' . $fasilitas->foto));
-        }
-
-        $fasilitas->delete();
-
-        return redirect()->route('admin.fasilitas.index')
-                         ->with('success', 'Fasilitas berhasil dihapus!');
-    }
-
-    public function toggleStatus(int $id)
-    {
-        $fasilitas = Fasilitas::findOrFail($id);
-        $fasilitas->is_active = !$fasilitas->is_active;
-        $fasilitas->save();
-
-        $status = $fasilitas->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        return redirect()->route('admin.fasilitas.index')
-                         ->with('success', "Fasilitas berhasil {$status}!");
-    }
+    $status = $fasilitas->is_active ? "diaktifkan" : "dinonaktifkan";
+    return redirect()
+      ->route("admin.fasilitas.index")
+      ->with("success", "Fasilitas berhasil {$status}!");
+  }
 }

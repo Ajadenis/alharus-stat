@@ -41,7 +41,7 @@
                 <div class="form-group">
                     <label for="icon">Icon</label>
                     <input type="text" name="icon" id="icon" class="form-control @error('icon') is-invalid @enderror" value="{{ old('icon', $program->icon) }}" placeholder="Contoh: bi-book, bi-mic, bi-star">
-                    <small class="form-text">Gunakan icon Bootstrap: <a href="https://icons.getbootstrap.com/" target="_blank">icons.getbootstrap.com</a></small>
+                    <small class="form-text">Gunakan icon Bootstrap: <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener">icons.getbootstrap.com</a></small>
                     @error('icon')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -63,7 +63,7 @@
                         <img src="{{ $program->foto_url }}" alt="Foto saat ini">
                         <div>
                             <p class="image-name"><strong>Foto saat ini:</strong> {{ $program->foto }}</p>
-                            <class="form-text">Upload foto baru untuk mengganti</small>
+                            <small class="form-text">Upload foto baru untuk mengganti</small>
                         </div>
                     </div>
                 @endif

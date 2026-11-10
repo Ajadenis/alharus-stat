@@ -52,7 +52,7 @@
                     <div class="info-icon"><i class="bi bi-book"></i></div>
                     <div class="info-text">
                         <strong>Mata Pelajaran</strong>
-                        {{ $guru->pluck('mata_pelajaran')->unique()->count() }} Bidang
+                        {{ $guru->pluck('mata_pelajaran')->filter()->unique()->count() }} Bidang
                     </div>
                 </div>
             </div>
@@ -75,9 +75,11 @@
                                 {{ $item->jabatan_list }}
                             </div>
                             <div class="guru-card-footer">
-                              <span class="guru-card-mapel">
-                                    <i class="bi bi-book"></i> {{ $item->mata_pelajaran }}
-                                </span>
+                              @if($item->mata_pelajaran)
+                                  <span class="guru-card-mapel">
+                                      <i class="bi bi-book"></i> {{ $item->mata_pelajaran }}
+                                  </span>
+                              @endif
                                 <span class="guru-card-status {{ $item->is_active ? 'active' : 'inactive' }}">
                                     <span class="status-dot"></span>
                                     {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}

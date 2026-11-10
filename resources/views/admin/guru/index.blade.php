@@ -86,7 +86,13 @@
                                     {{ $item->jabatan }}
                                 @endif
                             </td>
-                            <td><span class="badge-mapel">{{ $item->mata_pelajaran }}</span></td>
+                            <td>
+                                @if($item->mata_pelajaran)
+                                    <span class="badge-mapel">{{ $item->mata_pelajaran }}</span>
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td>
                                 <span class="status-badge {{ $item->is_active ? 'active' : 'inactive' }}">
                                     <span class="status-dot"></span>
@@ -98,9 +104,13 @@
                                     <a href="{{ route('admin.guru.edit', $item->id) }}" class="btn-action btn-edit" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="{{ route('admin.guru.toggle-status', $item->id) }}" class="btn-action btn-toggle" title="{{ $item->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
-                                        <i class="bi {{ $item->is_active ? 'bi-eye-slash' : 'bi-eye' }}"></i>
-                                    </a>
+                                    <form action="{{ route('admin.guru.toggle-status', $item->id) }}" method="POST" class="toggle-form">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn-action btn-toggle" title="{{ $item->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
+                                            <i class="bi {{ $item->is_active ? 'bi-eye-slash' : 'bi-eye' }}"></i>
+                                        </button>
+                                    </form>
                                     <form action="{{ route('admin.guru.destroy', $item->id) }}" method="POST" class="delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -131,7 +141,7 @@
 
         @if($guru->hasPages())
             <div class="pagination-wrapper">
-                {{ $guru->appends(request()->query())->links() }}
+                {{ $guru->links() }}
             </div>
         @endif
     </div>

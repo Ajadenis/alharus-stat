@@ -60,7 +60,7 @@
             <div class="form-group">
                 <label for="foto">Foto</label>
                 <input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror" accept="image/*">
-                <class="form-text">Format: JPG, PNG, JPEG, WEBP. Maks: 2MB</small>
+                <small class="form-text">Format: JPG, PNG, JPEG, WEBP. Maks: 2MB</small>
                 @error('foto')
                     <span class="invalid-feedback">{{ $message }}</span>
                 @enderror

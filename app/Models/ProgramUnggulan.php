@@ -4,43 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use App\Models\Concerns\HasUniqueSlug;
+use App\Models\Concerns\HasFotoUrl;
+use App\Models\Concerns\Activatable;
 
 class ProgramUnggulan extends Model
 {
-    use HasFactory;
+  use HasFactory, HasFotoUrl, HasUniqueSlug, Activatable;
 
-    protected $fillable = [
-        'nama',
-        'slug',
-        'deskripsi',
-        'foto',
-        'icon',
-        'kategori',
-        'is_active',
-    ];
+  protected string $fotoFolder = "program";
+  protected string $fotoDefault = "default-program.png";
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
+  protected $fillable = ["nama", "slug", "deskripsi", "foto", "icon", "kategori", "is_active"];
 
-    protected static function boot()
-    {
-        parent::boot();
+  protected $casts = [
+    "is_active" => "boolean",
+  ];
 
-        static::creating(function ($program) {
-            $program->slug = Str::slug($program->nama);
-        });
+  protected static function boot()
+  {
+    parent::boot();
 
-        static::updating(function ($program) {
-            if ($program->isDirty('nama')) {
-                $program->slug = Str::slug($program->nama);
-            }
-        });
-    }
+    static::creating(function ($program) {
+      $program->slug = static::buatSlugUnik($program->nama);
+    });
 
-    public function getFotoUrlAttribute()
-    {
-        return $this->foto ? asset('images/program/' . $this->foto) : asset('images/default-program.jpg');
-    }
+    static::updating(function ($program) {
+      if ($program->isDirty("nama")) {
+        $program->slug = static::buatSlugUnik($program->nama, $program->id);
+      }
+    });
+  }
 }

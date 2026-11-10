@@ -4,7 +4,8 @@
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 @endpush
 
-@section('title', 'Admin - Edit Kegiatan')
+@section('title', 'Edit Kegiatan - Admin Panel')
+@section('page-title', 'Edit Kegiatan')
 
 @section('content')
 <div class="admin-container">
@@ -54,7 +55,7 @@
                         </div>
                     @endif
                     <input type="file" name="gambar" id="gambar" class="form-control @error('gambar') is-invalid @enderror" accept="image/*">
-                    <class="form-text">Kosongkan jika tidak ingin mengubah gambar. Format: JPG, PNG, JPEG, WEBP. Maks: 2MB</small>
+                    <small class="form-text">Kosongkan jika tidak ingin mengubah gambar. Format: JPG, PNG, JPEG, WEBP. Maks: 2MB</small>
                     @error('gambar')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror

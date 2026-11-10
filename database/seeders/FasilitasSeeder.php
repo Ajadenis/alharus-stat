@@ -13,7 +13,7 @@ class FasilitasSeeder extends Seeder
             [
                 'nama' => 'Masjid Al-Harus',
                 'deskripsi' => 'Masjid sebagai pusat ibadah dan kegiatan keagamaan santri. Kapasitas 500 jamaah dengan fasilitas AC, sound system, dan ruang wudhu yang memadai.',
-                'foto' => 'masjid.jpg',
+                'foto' => null,
                 'icon' => 'bi-building',
                 'kategori' => 'Ibadah',
                 'jumlah' => 1,
@@ -22,7 +22,7 @@ class FasilitasSeeder extends Seeder
             [
                 'nama' => 'Koperasi Santri',
                 'deskripsi' => 'Perpustakaan dengan koleksi ribuan buku, kitab kuning, dan referensi ilmiah. Dilengkapi ruang baca yang nyaman dan area digital.',
-                'foto' => 'perpustakaan.jpg',
+                'foto' => null,
                 'icon' => 'bi-book',
                 'kategori' => 'Akademik',
                 'jumlah' => 2,
@@ -31,7 +31,7 @@ class FasilitasSeeder extends Seeder
             [
                 'nama' => 'Ruang Guru',
                 'deskripsi' => 'Asrama yang nyaman untuk Guru dengan kapasitas 200 santri. Dilengkapi kamar tidur, ruang belajar, dan fasilitas kebersihan.',
-                'foto' => 'asrama.jpg',
+                'foto' => null,
                 'icon' => 'bi-house',
                 'kategori' => 'Akomodasi',
                 'jumlah' => 200,
@@ -40,7 +40,7 @@ class FasilitasSeeder extends Seeder
             [
                 'nama' => 'Aula Serbaguna',
                 'deskripsi' => 'Aula serbaguna untuk acara besar, seminar, dan kegiatan santri. Kapasitas 300 orang dengan sound system dan layar proyektor.',
-                'foto' => 'aula.jpg',
+                'foto' => null,
                 'icon' => 'bi-easel',
                 'kategori' => 'Fasilitas',
                 'jumlah' => 1,
@@ -49,7 +49,7 @@ class FasilitasSeeder extends Seeder
             [
                 'nama' => 'Lapangan Olahraga',
                 'deskripsi' => 'Lapangan olahraga multifungsi untuk futsal, basket, dan voli. Dilengkapi dengan lampu penerangan untuk kegiatan malam.',
-                'foto' => 'lapangan.jpg',
+                'foto' => null,
                 'icon' => 'bi-controller',
                 'kategori' => 'Olahraga',
                 'jumlah' => 1,

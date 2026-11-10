@@ -1,14 +1,30 @@
-// Toggle class active
+// Navbar: buka/tutup menu (layar kecil) dan submenu Profil
+const menuBtn = document.querySelector("#menu");
 const navbarNav = document.querySelector(".navbar-nav");
-// ketika menu di kilk
-document.querySelector("#menu").onclick = () => {
-    navbarNav.classList.toggle("active");
-};
 
-// ketika klik di luar sidebar
-const menu = document.querySelector("#menu");
-document.addEventListener("click", function (e) {
-    if (!menu.contains(e.target) && !navbarNav.contains(e.target)) {
-        navbarNav.classList.remove("active");
-    }
-});
+if (menuBtn && navbarNav) {
+    // Tombol menu (hamburger)
+    menuBtn.addEventListener("click", e => {
+        e.preventDefault(); // href="#" tidak boleh melompat ke atas halaman
+        navbarNav.classList.toggle("active");
+    });
+
+    // Submenu Profil: di layar kecil dibuka lewat ketukan.
+    // Di desktop tetap dibuka lewat :hover di CSS.
+    document.querySelectorAll(".navbar .dropdown > .dropbtn").forEach(btn => {
+        btn.addEventListener("click", e => {
+            e.preventDefault();
+            btn.parentElement.classList.toggle("active");
+        });
+    });
+
+    // Klik di luar menu: tutup menu dan submenu
+    document.addEventListener("click", e => {
+        if (!menuBtn.contains(e.target) && !navbarNav.contains(e.target)) {
+            navbarNav.classList.remove("active");
+            document
+                .querySelectorAll(".navbar .dropdown.active")
+                .forEach(d => d.classList.remove("active"));
+        }
+    });
+}

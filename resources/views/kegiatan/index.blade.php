@@ -105,7 +105,7 @@
                             <img 
                                 src="{{ asset('images/' . $item->gambar) }}" 
                                 alt="{{ $item->judul }}"
-                                onerror="this.src='{{ asset('images/default-kegiatan.jpg') }}'"
+                                onerror="this.onerror=null;this.src='{{ asset('images/default-kegiatan.jpg') }}'"
                             >
                         </div>
                         <div class="content">

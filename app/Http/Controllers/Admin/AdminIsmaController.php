@@ -5,144 +5,114 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Isma;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use App\Http\Controllers\Concerns\HandlesImages;
 
 class AdminIsmaController extends Controller
 {
-    // INDEX
-    public function index(Request $request)
-    {
-        $query = Isma::query();
+  use HandlesImages;
+  // INDEX
+  public function index(Request $request)
+  {
+    $query = Isma::query();
 
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where('nama', 'LIKE', "%{$search}%");
-        }
-
-        if ($request->has('status') && !empty($request->status) && $request->status != 'semua') {
-            $query->where('is_active', $request->status == 'aktif');
-        }
-
-        $isma = $query->latest()->paginate(10);
-
-        return view('admin.isma.index', compact('isma'));
+    if ($request->has("search") && !empty($request->search)) {
+      $search = $request->search;
+      $query->where("nama", "LIKE", "%{$search}%");
     }
 
-    // CREATE
-    public function create()
-    {
-        return view('admin.isma.create');
+    if ($request->has("status") && !empty($request->status) && $request->status != "semua") {
+      $query->where("is_active", $request->status == "aktif");
     }
 
-    // STORE
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'jabatan' => 'required|array|min:1',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
-            ]);
+    $isma = $query
+      ->latest()
+      ->paginate(10)
+      ->withQueryString();
 
-        $data = $request->all();
-        $data['is_active'] = $request->has('is_active');
+    return view("admin.isma.index", compact("isma"));
+  }
+  private function rules(): array
+  {
+    return [
+      "nama" => "required|string|max:255",
+      "jabatan" => "required|array|min:1",
+      "jabatan.*" => "required|string|max:100",
+      "foto" => "nullable|image|mimes:jpeg,png,jpg,webp|max:10240",
+    ];
+  }
 
-        if ($request->hasFile('foto')) {
-    $file = $request->file('foto');
-    $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-    $destinationPath = public_path('images/isma');
+  // Validasi, lalu siapkan data siap simpan (hanya field yang tervalidasi)
+  private function dataTervalidasi(Request $request, ?Isma $isma = null): array
+  {
+    $data = $request->validate($this->rules());
+    $data["is_active"] = $request->has("is_active");
 
-    if (!file_exists($destinationPath)) {
-        mkdir($destinationPath, 0755, true);
+    if ($request->hasFile("foto")) {
+      $this->hapusGambar($isma?->foto, "isma"); // aman bila belum ada foto lama
+      $data["foto"] = $this->simpanGambar($request->file("foto"), "isma", $data["nama"]);
     }
 
-    $manager = ImageManager::usingDriver(Driver::class);
-    $image = $manager->decodePath($file->getRealPath());
-    $image->scale(width: 2000, height: 2000);
-    $image->save($destinationPath . '/' . $filename);
+    return $data;
+  }
 
-    $data['foto'] = $filename;
-}
+  // CREATE
+  public function create()
+  {
+    return view("admin.isma.create");
+  }
 
-        Isma::create($data);
+  // STORE
+  public function store(Request $request)
+  {
+    Isma::create($this->dataTervalidasi($request));
 
-        return redirect()->route('admin.isma.index')
-                         ->with('success', 'Anggota ISMA berhasil ditambahkan!');
-    }
+    return redirect()
+      ->route("admin.isma.index")
+      ->with("success", "Isma berhasil ditambahkan!");
+  }
 
-    // EDIT
-    public function edit(int $id)
-    {
-        $isma = Isma::findOrFail($id);
-        return view('admin.isma.edit', compact('isma'));
-    }
+  // EDIT
+  public function edit(int $id)
+  {
+    $isma = Isma::findOrFail($id);
+    return view("admin.isma.edit", compact("isma"));
+  }
 
-    // UPDATE
-    public function update(Request $request,int  $id)
-    {
-        $isma = Isma::findOrFail($id);
+  // UPDATE
+  public function update(Request $request, int $id)
+  {
+    $isma = Isma::findOrFail($id);
+    $isma->update($this->dataTervalidasi($request, $isma));
 
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'jabatan' => 'required|array|min:1',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
-            ]);
+    return redirect()
+      ->route("admin.isma.index")
+      ->with("success", "isma berhasil diperbarui!");
+  }
 
-        $data = $request->all();
-        $data['is_active'] = $request->has('is_active');
+  // DESTROY
+  public function destroy(int $id)
+  {
+    $isma = Isma::findOrFail($id);
 
-        if ($request->hasFile('foto')) {
-    if ($isma->foto && file_exists(public_path('images/isma/' . $isma->foto))) {
-        unlink(public_path('images/isma/' . $isma->foto));
-    }
+    $this->hapusGambar($isma->foto, "isma");
 
-    $file = $request->file('foto');
-    $filename = time() . '_' . Str::slug($request->nama) . '.' . $file->getClientOriginalExtension();
-    $destinationPath = public_path('images/isma');
+    $isma->delete();
 
-    if (!file_exists($destinationPath)) {
-        mkdir($destinationPath, 0755, true);
-    }
+    return redirect()
+      ->route("admin.isma.index")
+      ->with("success", "Anggota ISMA berhasil dihapus!");
+  }
 
-    $manager = ImageManager::usingDriver(Driver::class);
-    $image = $manager->decodePath($file->getRealPath());
-    $image->scale(width: 2000, height: 2000);
-    $image->save($destinationPath . '/' . $filename);
+  // TOGGLE STATUS
+  public function toggleStatus(int $id)
+  {
+    $isma = Isma::findOrFail($id);
+    $isma->is_active = !$isma->is_active;
+    $isma->save();
 
-    $data['foto'] = $filename;
-}
-
-        $isma->update($data);
-
-        return redirect()->route('admin.isma.index')
-                         ->with('success', 'Anggota ISMA berhasil diperbarui!');
-    }
-
-    // DESTROY
-    public function destroy(int $id)
-    {
-        $isma = Isma::findOrFail($id);
-
-        if ($isma->foto && file_exists(public_path('images/isma/' . $isma->foto))) {
-            unlink(public_path('images/isma/' . $isma->foto));
-        }
-
-        $isma->delete();
-
-        return redirect()->route('admin.isma.index')
-                         ->with('success', 'Anggota ISMA berhasil dihapus!');
-    }
-
-    // TOGGLE STATUS
-    public function toggleStatus(int $id)
-    {
-        $isma = Isma::findOrFail($id);
-        $isma->is_active = !$isma->is_active;
-        $isma->save();
-
-        $status = $isma->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        return redirect()->route('admin.isma.index')
-                         ->with('success', "Anggota ISMA berhasil {$status}!");
-    }
+    $status = $isma->is_active ? "diaktifkan" : "dinonaktifkan";
+    return redirect()
+      ->route("admin.isma.index")
+      ->with("success", "Anggota ISMA berhasil {$status}!");
+  }
 }
