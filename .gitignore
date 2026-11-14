@@ -30,3 +30,11 @@ Thumbs.db
 /storage/framework/sessions/*
 /storage/framework/views/*
 /storage/logs/*.log
+# Unggahan pengguna (bukan bagian dari kode)
+/public/images/infak/
+/public/images/guru/*
+/public/images/isma/*
+/public/images/fasilitas/*
+/public/images/program/*
+/public/images/santri/*
+/public/images/kegiatan/*

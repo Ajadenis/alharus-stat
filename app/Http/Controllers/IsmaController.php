@@ -8,7 +8,7 @@ class IsmaController extends Controller
 {
   public function index()
   {
-    $isma = Isma::where("is_active", true)->get();
+    $isma = Isma::active()->get();
     return view("profil.isma", compact("isma"));
   }
 }

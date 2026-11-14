@@ -136,6 +136,10 @@ body {
     color: #fff;
 }
 
+.sidebar-logout-form {
+    margin: 0;
+}
+
 .sidebar-footer .logout-btn {
     display: flex;
     align-items: center;
@@ -148,6 +152,7 @@ body {
     border-radius: 0.5rem;
     transition: all 0.3s ease;
     font-size: 0.95rem;
+    text-align: left;
     cursor: pointer;
     font-family: "Poppins", sans-serif;
 }
@@ -223,17 +228,6 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-}
-.header-logout-form {
-    display: inline;
-}
-
-.header-logout {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #dc3545;
-    font-size: 1.2rem;
 }
 
 .header-left {

@@ -8,7 +8,7 @@ class GuruController extends Controller
 {
   public function index()
   {
-    $guru = Guru::where("is_active", true)->get();
+    $guru = Guru::active()->get();
     return view("profil.guru", compact("guru"));
   }
 }

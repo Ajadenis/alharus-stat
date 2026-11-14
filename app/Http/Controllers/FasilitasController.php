@@ -8,14 +8,14 @@ class FasilitasController extends Controller
 {
   public function index()
   {
-    $fasilitas = Fasilitas::where("is_active", true)->get();
+    $fasilitas = Fasilitas::active()->get();
     return view("fasilitas.index", compact("fasilitas"));
   }
 
   public function show($slug)
   {
     $fasilitas = Fasilitas::where("slug", $slug)
-      ->where("is_active", true)
+      ->active()
       ->firstOrFail();
     return view("fasilitas.show", compact("fasilitas"));
   }

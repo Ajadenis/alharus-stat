@@ -98,10 +98,11 @@
                 <span>Lihat Website</span>
             </a>
             
-            <form action="{{ route('logout') }}" method="POST" class="header-logout-form">
+            <form action="{{ route('logout') }}" method="POST" class="sidebar-logout-form">
                 @csrf
-                <button type="submit" class="header-logout" title="Logout" aria-label="Logout">
+                <button type="submit" class="logout-btn" aria-label="Logout">
                   <i class="bi bi-box-arrow-right"></i>
+                  <span>Logout</span>
                 </button>
             </form>
         </div>

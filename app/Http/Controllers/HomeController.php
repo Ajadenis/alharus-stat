@@ -8,7 +8,7 @@ class HomeController extends Controller
 {
   public function index()
   {
-    $kegiatanTerbaru = Kegiatan::where("is_active", true)
+    $kegiatanTerbaru = Kegiatan::active()
       ->latest()
       ->limit(3)
       ->get();

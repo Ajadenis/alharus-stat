@@ -180,6 +180,9 @@
             }, options.headers || {});
 
             const response = await fetch(url, options);
+            if (response.status === 429) {
+              throw new error('Terlalu Banyak percobaan. Silahkan coba lagi sebentar lagi.');
+            }
             const data = await response.json().catch(() => null);
 
             if (!data) {

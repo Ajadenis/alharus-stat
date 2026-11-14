@@ -172,7 +172,7 @@
                         <div class="recent-meta">
                             <span class="recent-date">
                                 <i class="bi bi-calendar3"></i>
-                                {{ $item->tanggal_bayar ? $item->tanggal_bayar->format('d M Y') : ($item->nama_bulan . '/' . $item->tahun) }}
+                                {{ $item->tanggal_bayar ? $item->tanggal_bayar->translatedFormat('d M Y') : ($item->nama_bulan . '/' . $item->tahun) }}
                             </span>
                             <span class="recent-source">
                                 <i class="bi bi-person"></i>
@@ -252,7 +252,7 @@
                             <div class="recent-meta">
                                 <span class="recent-date">
                                     <i class="bi bi-calendar3"></i>
-                                    {{ $item->tanggal ? $item->tanggal->format('d M Y') : '-' }}
+                                    {{ $item->tanggal ? $item->tanggal->translatedFormat('d M Y') : '-' }}
                                 </span>
                                 <span class="recent-status {{ $item->is_active ? 'active' : 'inactive' }}">
                                     {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}

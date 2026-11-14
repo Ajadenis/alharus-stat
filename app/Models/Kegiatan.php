@@ -47,6 +47,6 @@ class Kegiatan extends Model
   // Accessor untuk format tanggal
   public function getFormattedTanggalAttribute()
   {
-    return $this->tanggal ? $this->tanggal->format("d M Y") : "-";
+    return $this->tanggal ? $this->tanggal->translatedFormat("d M Y") : "-";
   }
 }
